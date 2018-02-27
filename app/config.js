@@ -1,5 +1,5 @@
-const URL = 'http://localhost:3000/api';  //Local Server URL
-// const URL = 'http://node.cyberframe.in/api';  //Live Server URL
+// const URL = 'http://localhost:3000/api';  //Local Server URL
+const URL = 'https://qibto.herokuapp.com//api';  //Live Server URL
 
 module.exports = {
     'database': 'mongodb://qibto:qibto@ds245518.mlab.com:45518/qibto', // Live Server Mlab Database
