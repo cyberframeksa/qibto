@@ -423,7 +423,7 @@ function forgotPasswordUser(req, res){
 
                     let mailOptions = {
                         from: '"Admin " <amit.dubey@cyberframe.in>',
-                        to: 'amitdubeynodemailer@gmail.com',
+                        to: email,
                         subject: 'Reset Password !',
                         html: 
                             `
