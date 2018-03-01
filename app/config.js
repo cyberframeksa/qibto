@@ -8,5 +8,5 @@ module.exports = {
     'token_secret': 'qibto_backend_secret',
     'token_expire':'30 days',
     'SERVER_URL': URL
-}
+};
 
