@@ -1,15 +1,13 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-// const nodemailer = require('nodemailer');
-// const smtpTransport = require('nodemailer-smtp-transport');
+const nodemailer = require('nodemailer');
+const smtpTransport = require('nodemailer-smtp-transport');
 const uuidv4 = require('uuid/v4');
-const generator = require('generate-password');
+var generator = require('generate-password');
 
 const User = require('../models/user');
 const Token = require('../models/token');
 const config = require('../config');
-const mailFunction = require('./mail');
-
 
 module.exports = {
     signUpUser: signUpUser,
@@ -70,43 +68,12 @@ function signUpUser(req, res) {
                             email: user.email
                         }
                         var token = jwt.sign({ data: payload }, config.token_secret, { expiresIn: config.token_expire });
-                        const email = user.email;
-                        const subject = 'Registration Successfull !';
-                        const html = `
-                                    <br><b>Dear ${user.first_name} ${user.last_name} !</b><br><br>
-                                    <p>Your account has been created successfully !</p>
-                                    <p>Please login to your account and keep enjoying our services !</p><br>
-                                    <p>Thanks</p>
-                                    <b>QIBTO Team</b>
-                                    `;
-                        try{
-                            (mailFunction.sendEmail(email, subject, html)).then((response)=>{ 
-                                if(response)
-                                {
-                                    res.status(200);
-                                    return res.json({
-                                        success: true,
-                                        message: 'User registered successfully !',
-                                        token: token
-                                    });
-                                }
-                                else
-                                {
-                                    res.status(400);
-                                    return res.json({
-                                        success: false,
-                                        message: 'Unable to register user, Please try after sometime !',
-                                    });
-                                }
-                            });
-                        }
-                        catch(e){
-                            res.status(400);
-                            return res.json({
-                                success: false,
-                                message: 'Unable to register user, Please try after sometime !',
-                            });
-                        }
+                        res.status(200);
+                        return res.json({
+                            success: true,
+                            message: 'User registered successfully !',
+                            token: token
+                        });
                     }, (err)=>{
                         res.status(400);
                         return res.json({
@@ -438,52 +405,57 @@ function forgotPasswordUser(req, res){
                     success: false,
                     message: 'Email address is not found in our database !'
                 });
-            } 
-            else 
-            {
-                const token = uuidv4();
+            } else {
+
                 const email = req.body.email;
-                const subject = 'Reset Password !';
-                const html = `
-                             <br><b>Dear ${email} !</b><br><br>
-                             <p>You have requested to reset your password. Please click on below link to reset your password.</p><br>
-                             <a href="${config.SERVER_URL}/users/reset/${token}">Click me to reset your password !</a><br><br>
-                             <p>Thanks</p>
-                             <b>QIBTO Team</b>
-                             `;
-                try{
-                    (mailFunction.sendEmail(email, subject, html)).then((response)=>{ 
-                        if(response)
-                        {
-                            var newToken = new Token({
-                                token: token,
-                                userId: user._id,
-                                email: email
-                            });
-                            newToken.save();
-                            res.status(200);
-                            return res.json({
-                                success: true,
-                                message: 'A password reset link has been sent to your email !'
-                            });
+                nodemailer.createTestAccount((err, account) => {
+
+                    var transporter = nodemailer.createTransport(smtpTransport({
+                        service: 'gmail',
+                        host: 'smtp.gmail.com',
+                        auth: {
+                            user: 'amit.dubey@cyberframe.in',
+                            pass: 'cyberframeksa'
                         }
-                        else
-                        {
+                        }));
+
+                    const token = uuidv4();
+
+                    let mailOptions = {
+                        from: '"Admin " <amit.dubey@cyberframe.in>',
+                        to: email,
+                        subject: 'Reset Password !',
+                        html: 
+                            `
+                            <br><b>Dear ${email} !</b><br><br>
+                            <p>You have requested to reset your password. Please click on below link to reset your password.</p><br>
+                            <a href="${config.SERVER_URL}/users/reset/${token}">Click me to reset your password !</a><br><br>
+                            <p>Thanks</p>
+                            <b>QIBTO Team</b>
+                            `
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
                             res.status(400);
                             return res.json({
                                 success: false,
                                 message: 'Unable to send email, Please try after sometime !',
+                                error:error
                             });
                         }
+                        var newToken = new Token({
+                            token: token,
+                            userId: user._id
+                        });
+                        newToken.save();
+                        res.status(200);
+                        return res.json({
+                            success: true,
+                            message: 'A password reset link has been sent to your email !'
+                        });
                     });
-                }
-                catch(e){
-                    res.status(400);
-                    return res.json({
-                        success: false,
-                        message: 'Unable to send email, Please try after sometime !',
-                    });
-                }
+                });
             }
         })
     }
@@ -566,38 +538,8 @@ function resetPasswordUser(req, res, next) {
                         Token.remove({ userId: tokenInfo.userId }, function (err, success) {
                             if (err) throw err;
                         });
-                        const email = tokenInfo.email;
-                        const subject = 'Password Changed Successfully !';
-                        const html = `
-                                    <br><b>Dear ${email} !</b><br><br>
-                                    <p>Your password has been changed successfully !</p><br>
-                                    <p>Thanks</p>
-                                    <b>QIBTO Team</b>
-                                    `;
-                        try{
-                            (mailFunction.sendEmail(email, subject, html)).then((response)=>{ 
-                                if(response)
-                                {
-                                    res.render('response');
-                                }
-                                else
-                                {
-                                    res.status(400);
-                                    return res.json({
-                                        success: false,
-                                        message: 'Unable to change password, Please try after sometime !',
-                                    });
-                                }
-                            });
-                        }
-                        catch(e){
-                            res.status(400);
-                            return res.json({
-                                success: false,
-                                message: 'Unable to change password, Please try after sometime !',
-                            });
-                        }
-                    });
+                        res.render('response');
+                    })
                 });
             });
         });

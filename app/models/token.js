@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 
-// Token Schema
 var TokenSchema = mongoose.Schema({
     token: { type: String },
-    userId: { type: String, ref: 'User' }
+    userId: { type: String, ref: 'User' },
+    email: { type: String, ref: 'User' }
 }, 
 {
     timestamps: true,
