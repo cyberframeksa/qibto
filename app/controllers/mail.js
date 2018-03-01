@@ -42,11 +42,3 @@ function sendEmail(to, subject, html){
 
     });
 }
-
-// function returnPromise(){
-//     return new Promise((resolve, reject) => {
-//         setTimeout(function(){
-//             resolve("Success!");
-//         }, 250);
-//     });
-// }

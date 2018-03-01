@@ -1,7 +1,5 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-// const nodemailer = require('nodemailer');
-// const smtpTransport = require('nodemailer-smtp-transport');
 const uuidv4 = require('uuid/v4');
 const generator = require('generate-password');
 
@@ -20,7 +18,8 @@ module.exports = {
     changePasswordUser: changePasswordUser,
     forgotPasswordUser: forgotPasswordUser,
     resetUser: resetUser,
-    resetPasswordUser: resetPasswordUser
+    resetPasswordUser: resetPasswordUser,
+    removeUser: removeUser
 }
 
 function signUpUser(req, res) {
@@ -604,3 +603,58 @@ function resetPasswordUser(req, res, next) {
     }
 }
 
+function removeUser(req, res){
+    try{
+        jwt.verify(req.body.token, config.token_secret, function(err, decoded) {
+            if(err)
+            {
+                res.status(400);
+                return res.json({
+                    success:false,
+                    message:"You are not authenticated to make this request !",
+                    error: err
+                });
+            }
+            else
+            {
+                if(!req.body.data._id){
+                    res.status(400);
+                    return res.json({
+                        success:false,
+                        message:'Unable to remove, Unique id not found !'
+                    });
+                }
+                else{
+                    User.findById(req.body.data._id, function (err, user) {
+                        if (err) throw err;
+                        if(!user){
+                            res.status(400);
+                            return res.json({
+                                success:false,
+                                message:"Unable to delete, Car not found !",
+                            });
+                        }
+                        else{
+                            User.findByIdAndRemove(req.body.data._id, (err, user) => {
+                                if(err) throw err;
+                                res.status(200);
+                                return res.json({
+                                    success:true,
+                                    message:"User deleted successfully !",
+                                });
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
+    catch(err){
+        res.status(400);
+        return res.json({
+            success:false,
+            message:"Unable to verify identity, Please try again !",
+            error: error
+        });
+    }
+}

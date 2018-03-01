@@ -12,6 +12,7 @@ router.post('/changepassword', UserController.changePasswordUser);
 router.post('/forgotpassword', UserController.forgotPasswordUser);
 router.get('/reset/:token', UserController.resetUser);
 router.post('/reset-password/:token', UserController.resetPasswordUser);
+router.post('/removeuser', UserController.removeUser);
 
 router.get('/', function (req, res, next) {
     res.status(200);
