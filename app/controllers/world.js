@@ -261,12 +261,12 @@ function getCity(req, res){
 }
 
 function updateCountry(req, res){
-    if(req.body.country_id==null || req.body.country_id==''){
+    if(req.body.country_id==null || req.body.country_name==null){
         res.status(400);
         return res.json({
             success:false,
             message:'Unable to update country !',
-            error: 'Unique id (country_id) not found !'
+            error: 'Required field error !'
         });
     }
     else
@@ -290,12 +290,12 @@ function updateCountry(req, res){
 }
 
 function updateState(req, res){
-    if(req.body.state_id==null || req.body.state_id==''){
+    if(req.body.state_id==null || req.body.state_name==''){
         res.status(400);
         return res.json({
             success:false,
             message:'Unable to update state !',
-            error: 'Unique id (state_id) not found !'
+            error: 'Required field error !'
         });
     }
     else
@@ -319,12 +319,12 @@ function updateState(req, res){
 }
 
 function updateCity(req, res){
-    if(req.body.city_id==null || req.body.city_id==''){
+    if(req.body.city_id==null || req.body.city_name==null){
         res.status(400);
         return res.json({
             success:false,
             message:'Unable to update city !',
-            error: 'Unique id (city_id) not found !'
+            error: 'Required field error !'
         });
     }
     else
