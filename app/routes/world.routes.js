@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const WorldController = require('../controllers/world');
 
+router.post('/addallcountry', WorldController.addAllCountry);
+router.get('/getallcountry', WorldController.getAllCountry);
+
 router.post('/addcountry', WorldController.addCountry);
 router.post('/addstate', WorldController.addState);
 router.post('/addcity', WorldController.addCity);

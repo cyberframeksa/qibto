@@ -2,8 +2,11 @@ const Country = require('../models/country');
 const State = require('../models/state');
 const City = require('../models/city');
 const config = require('../config');
+const http = require('http');
 
 module.exports = {
+    addAllCountry: addAllCountry,
+    getAllCountry: getAllCountry,
     addCountry : addCountry,
     addState   : addState,
     addCity    : addCity,
@@ -16,6 +19,50 @@ module.exports = {
     disableCountry:disableCountry,
     disableState:disableState,
     disableCity:disableCity
+}
+
+function addAllCountry(req, res){
+    var list = Array();
+    var success_count=0;
+    var failed_count=0;
+    var request = require('request');
+    request('http://battuta.medunes.net/api/city/in/search/?region=Uttar%20Pradesh&key=de51b522bd8093762a3195b4fececcf2', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            list = JSON.parse(body);
+            console.log('Total Item ', list.length);
+            list.forEach(element => {
+                var city = new City({
+                    state_id: '5aa9166f4b8b9b25c06c7799',
+                    city_name: element.city
+                });
+                city.save(city).then((res)=>{
+                    success_count++;
+                    console.log(`Success ${success_count}`, res);
+                }).catch((error)=>{
+                    failed_count++;
+                    console.log(`Failed ${failed_count}`, error);
+                });
+            });
+        }
+    });
+}
+
+function getAllCountry(req, res){
+    Country.find().then((countries)=>{
+        res.status(200);
+        return res.json({
+            success:true,
+            message:'Countries fetched successfully !',
+            countries: countries
+        });
+    }).catch((error)=>{
+        res.status(400);
+        return res.json({
+            success:false,
+            message:'Unable to fetch countries !',
+            error:error
+        });
+    });
 }
 
 function addCountry(req, res){
