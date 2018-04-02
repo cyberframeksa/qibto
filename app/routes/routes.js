@@ -1,15 +1,21 @@
 const express = require('express');
 const routes = express.Router();
 
+const adminRoutes = require('./admin.routes');
 const userRoutes = require('./user.routes');
 const packageRoutes = require('./package.routes');
 const carRoutes = require('./car.routes');
 const worldRoutes = require('./world.routes');
+const schoolRoutes = require('./school.routes');
+const driverRoutes = require('./driver.routes');
 
+routes.use('/admin', adminRoutes);
 routes.use('/users', userRoutes);
 routes.use('/package', packageRoutes);
 routes.use('/car', carRoutes);
 routes.use('/world', worldRoutes);
+routes.use('/school', schoolRoutes);
+routes.use('/driver', driverRoutes);
 
 routes.get('/', function(req, res){ 
     res.status(200);

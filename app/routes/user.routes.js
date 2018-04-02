@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/user');
-const authMiddleware = require('../middlewares/auth.middleware');
+const authGuard = require('../auth/auth');
 
 router.post('/signup', UserController.signUpUser);
 router.post('/signin', UserController.signInUser);
 router.post('/getuser', UserController.getUser);
-router.post('/getallusers', UserController.getAllUsers);
+router.post('/getallusers', authGuard, UserController.getAllUsers);
 router.post('/updateprofile', UserController.updateProfileUser);
 router.post('/changepassword', UserController.changePasswordUser);
 router.post('/forgotpassword', UserController.forgotPasswordUser);

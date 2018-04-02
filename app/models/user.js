@@ -49,6 +49,7 @@ module.exports = mongoose.model('User', new Schema({
     area:               {type: String, default:null },
     city:               {type: String, default:null },
     state:              {type: String, default:null },
+    country:            {type: String, default:null },
     pincode:            {
                             type: Number,
                             default:null,

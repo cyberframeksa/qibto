@@ -2,12 +2,12 @@ const Country = require('../models/country');
 const State = require('../models/state');
 const City = require('../models/city');
 const config = require('../config');
-const http = require('http');
 
 module.exports = {
     addAllCountry: addAllCountry,
     getAllCountry: getAllCountry,
     addCountry : addCountry,
+    addAllState: addAllState,
     addState   : addState,
     addCity    : addCity,
     getCountry : getCountry,
@@ -18,21 +18,22 @@ module.exports = {
     updateCity:updateCity,
     disableCountry:disableCountry,
     disableState:disableState,
-    disableCity:disableCity
+    disableCity:disableCity,
+    removeCountry:removeCountry
 }
 
-function addAllCountry(req, res){
+function addAllState(req, res){
     var list = Array();
     var success_count=0;
     var failed_count=0;
     var request = require('request');
-    request('http://battuta.medunes.net/api/city/in/search/?region=Uttar%20Pradesh&key=de51b522bd8093762a3195b4fececcf2', function (error, response, body) {
+    request('http://battuta.medunes.net/api/city/in/search/?region=State%20of%20Himachal%20Pradesh&key=de51b522bd8093762a3195b4fececcf2', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             list = JSON.parse(body);
             console.log('Total Item ', list.length);
             list.forEach(element => {
                 var city = new City({
-                    state_id: '5aa9166f4b8b9b25c06c7799',
+                    state_id: '5abb8952834a70fd2232a50e',
                     city_name: element.city
                 });
                 city.save(city).then((res)=>{
@@ -42,6 +43,42 @@ function addAllCountry(req, res){
                     failed_count++;
                     console.log(`Failed ${failed_count}`, error);
                 });
+            });
+            res.status(200);
+            return res.json({
+                success:true,
+                message:'Data Added Successfully !'
+            });
+        }
+    });
+}
+
+function addAllCountry(req, res){
+   var list = Array();
+    var success_count=0;
+    var failed_count=0;
+    var request = require('request');
+    request('http://battuta.medunes.net/api/city/in/search/?region=State%20of%20Himachal%20Pradesh&key=de51b522bd8093762a3195b4fececcf2', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            list = JSON.parse(body);
+            console.log('Total Item ', list.length);
+            list.forEach(element => {
+                var city = new City({
+                    state_id: '5abb8952834a70fd2232a50e',
+                    city_name: element.city
+                });
+                city.save(city).then((res)=>{
+                    success_count++;
+                    console.log(`Success ${success_count}`, res);
+                }).catch((error)=>{
+                    failed_count++;
+                    console.log(`Failed ${failed_count}`, error);
+                });
+            });
+            res.status(200);
+            return res.json({
+                success:true,
+                message:'Data Added Successfully !'
             });
         }
     });
@@ -395,7 +432,8 @@ function updateCity(req, res){
 }
 
 function disableCountry(req, res){
-    if(req.body.country_id==null || req.body.country_id==''){
+    console.log(req.body.country_id);
+    if(!req.body.country_id){
         res.status(400);
         return res.json({
             success:false,
@@ -481,3 +519,35 @@ function disableCity(req, res){
     }
 }
 
+
+function removeCountry(req, res){
+    if(!req.body.country_id){
+        res.status(400);
+        return res.json({
+            success:false,
+            message:'Unable to delete, Unique id(country_id) not found !'
+        });
+    }
+    else{
+        Country.findById(req.body.country_id, function (err, country) {
+            if (err) throw err;
+            if(!country){
+                res.status(400);
+                return res.json({
+                    success:false,
+                    message:"Unable to delete, Country not found !",
+                });
+            }
+            else{
+                Country.findByIdAndRemove(req.body.country_id, (err, country) => {
+                    if(err) throw err;
+                    res.status(200);
+                    return res.json({
+                        success:true,
+                        message:"Country deleted successfully !",
+                    });
+                });
+            }
+        });
+    }
+}

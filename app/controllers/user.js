@@ -225,53 +225,32 @@ function getUser(req, res){
 }
 
 function getAllUsers(req, res){
-    try{
-        jwt.verify(req.body.token, config.token_secret, function(err, decoded) {
-            if(err){
-                res.status(400);
-                return res.json({
-                    success:false,
-                    message:"You are not authenticated to make this request !",
-                    error: err
-                });
-            }else{
-                User.find(req.body.data, (err, user) => {
-                    if (err){
-                        res.status(400);
-                        return res.json({
-                            success:false,
-                            message:"Internal server error !",
-                            error:err
-                        });
-                    }
-                    if(!user){
-                        res.status(200);
-                        return res.json({
-                            success:false,
-                            message:"Users not found !",
-                            data:null
-                        });
-                    }
-                    else{
-                        res.status(200);
-                        return res.json({
-                            success:true,
-                            message:"Users fetched successfully !",
-                            data: user
-                        });
-                    }
-                });
-            }
-        });
-    }
-    catch(err){
-        res.status(400);
-        return res.json({
-            success:false,
-            message:"Unable to verify identity, Please try again !",
-            error: error
-        });
-    }
+    User.find(req.body.data, (err, user) => {
+        if (err){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Internal server error !",
+                error:err
+            });
+        }
+        if(!user){
+            res.status(200);
+            return res.json({
+                success:false,
+                message:"Users not found !",
+                data:null
+            });
+        }
+        else{
+            res.status(200);
+            return res.json({
+                success:true,
+                message:"Users fetched successfully !",
+                data: user
+            });
+        }
+    });
 }
 
 function updateProfileUser(req, res){

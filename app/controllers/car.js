@@ -8,8 +8,7 @@ module.exports = {
     removeCar: removeCar  
 }
 
-function addCar(req, res) {
-    
+function addCar(req, res, next) {
     var newCar = new Car({
         car_brand: req.body.car_brand,
         car_type:  req.body.car_type,
@@ -18,25 +17,34 @@ function addCar(req, res) {
     });
 
     newCar.save((err, car) => {
-        if (err) throw err;
+        if(err){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Unable to add car !",
+                error:err
+            });
+        }
         res.status(200);
         return res.json({
             success: true,
             message: 'Car added successfully !',
             data: car
         });
-    }, (err)=>{
-        res.status(400);
-        return res.json({
-            success:false,
-            error: err
-        });
     });
 }
 
 function getCar(req, res){
+
     Car.find(req.body, function (err, car) {
-        if (err) throw err;
+        if(err){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Unable to find car !",
+                error:err
+            });
+        }
         if(!car){
             res.status(400);
             return res.json({
@@ -54,9 +62,10 @@ function getCar(req, res){
             });
         }
     });
+
 }
 
-function updateCar(req, res){
+function updateCar(req, res, next){
     if(!req.body._id){
         res.status(400);
         return res.json({
@@ -66,7 +75,14 @@ function updateCar(req, res){
     }
     else{
         Car.findById(req.body._id, function (err, car) {
-            if (err) throw err;
+            if (err){
+                res.status(400);
+                return res.json({
+                    success:false,
+                    message:"Unable to update car !",
+                    error:err
+                });
+            }
             if(!car){
                 res.status(400);
                 return res.json({
@@ -76,7 +92,14 @@ function updateCar(req, res){
             }
             else{
                 Car.findByIdAndUpdate(req.body._id, {$set: req.body}, {new:true}, (err, car) => {
-                    if(err) throw err;
+                    if(err){
+                        res.status(400);
+                        return res.json({
+                            success:false,
+                            message:"Unable to update car !",
+                            error:err
+                        });
+                    }
                     res.status(200);
                     return res.json({
                         success:true,
@@ -89,31 +112,45 @@ function updateCar(req, res){
     }
 }
 
-function removeCar(req, res){
+function removeCar(req, res, next){
     if(!req.body._id){
         res.status(400);
         return res.json({
             success:false,
-            message:'Unable to update, Unique id not found !'
+            message:'Unable to remove, Unique id not found !'
         });
     }
     else{
         Car.findById(req.body._id, function (err, car) {
-            if (err) throw err;
+            if (err){
+                res.status(400);
+                return res.json({
+                    success:false,
+                    message:"Unable to remove car !",
+                    error:err
+                });
+            }
             if(!car){
                 res.status(400);
                 return res.json({
                     success:false,
-                    message:"Unable to delete, Car not found !",
+                    message:"Unable to remove, Car not found !",
                 });
             }
             else{
                 Car.findByIdAndRemove(req.body._id, (err, car) => {
-                    if(err) throw err;
+                    if(err){
+                        res.status(400);
+                        return res.json({
+                            success:false,
+                            message:"Unable to remove car !",
+                            error:err
+                        });
+                    }
                     res.status(200);
                     return res.json({
                         success:true,
-                        message:"Car deleted successfully !",
+                        message:"Car removed successfully !",
                     });
                 });
             }

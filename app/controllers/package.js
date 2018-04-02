@@ -8,7 +8,7 @@ module.exports = {
     removePackage: removePackage  
 }
 
-function addPackage(req, res) {
+function addPackage(req, res, next) {
 
     var newPackage = new Package({
         car_id:     req.body.car_id,
@@ -19,27 +19,35 @@ function addPackage(req, res) {
         course_duration: req.body.course_duration
     });
 
-    newPackage.save(function (err, package) {
-        if (err) throw err;
+    newPackage.save((err, pack) => {
+        if(err){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Unable to add package !",
+                error:err
+            });
+        }
         res.status(200);
         return res.json({
             success: true,
             message: 'Package added successfully !',
-            data: package
-        });
-    }, (err)=>{
-        res.status(400);
-        return res.json({
-            success:false,
-            error: err
+            data: pack
         });
     });
 }
 
 function getPackage(req, res){
-    Package.find(req.body, function (err, package) {
-        if (err) throw err;
-        if(!package){
+    Package.find(req.body).populate('car').exec(function (err, pack) {
+        if(err){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Unable to find package !",
+                error:err
+            });
+        }
+        if(!pack){
             res.status(400);
             return res.json({
                 success:false,
@@ -52,7 +60,7 @@ function getPackage(req, res){
             return res.json({
                 success:true,
                 message:"Package fetched successfully !",
-                data:package
+                data:pack
             });
         }
     });
@@ -67,9 +75,16 @@ function updatePackage(req, res){
         });
     }
     else{
-        Package.findById(req.body._id, function (err, package) {
-            if (err) throw err;
-            if(!package){
+        Package.findById(req.body._id, function (err, pack) {
+            if(err){
+                res.status(400);
+                return res.json({
+                    success:false,
+                    message:"Unable to update package !",
+                    error:err
+                });
+            }
+            if(!pack){
                 res.status(400);
                 return res.json({
                     success:false,
@@ -77,13 +92,20 @@ function updatePackage(req, res){
                 });
             }
             else{
-                Package.findByIdAndUpdate(req.body._id, {$set: req.body}, {new:true},(err, package) => {
-                    if(err) throw err;
+                Package.findByIdAndUpdate(req.body._id, {$set: req.body}, {new:true},(err, pack) => {
+                    if(err){
+                        res.status(400);
+                        return res.json({
+                            success:false,
+                            message:"Unable to update package !",
+                            error:err
+                        });
+                    }
                     res.status(200);
                     return res.json({
                         success:true,
                         message:"Package updated successfully !",
-                        data:package
+                        data:pack
                     });
                 });
             }
@@ -100,8 +122,15 @@ function removePackage(req, res){
         });
     }
     else{
-        Package.findById(req.body._id, function (err, package) {
-            if (err) throw err;
+        Package.findById(req.body._id, function (err, pack) {
+            if(err){
+                res.status(400);
+                return res.json({
+                    success:false,
+                    message:"Unable to remove package !",
+                    error:err
+                });
+            }
             if(!package){
                 res.status(400);
                 return res.json({
@@ -110,8 +139,15 @@ function removePackage(req, res){
                 });
             }
             else{
-                Package.findByIdAndRemove(req.body._id, (err, package) => {
-                    if(err) throw err;
+                Package.findByIdAndRemove(req.body._id, (err, pack) => {
+                    if(err){
+                        res.status(400);
+                        return res.json({
+                            success:false,
+                            message:"Unable to remove package !",
+                            error:err
+                        });
+                    }
                     res.status(200);
                     return res.json({
                         success:true,
