@@ -4,6 +4,7 @@ const SchoolController = require('../controllers/school');
 const authGaurd = require('../auth/auth');
 
 router.post('/addschool', authGaurd, SchoolController.addSchool);
+router.post('/admin/login', SchoolController.loginSchool);
 router.post('/getschool', SchoolController.getSchool);
 router.post('/getsingleschool', SchoolController.getSingleSchool);
 router.post('/updateschool', authGaurd, SchoolController.updateSchool);

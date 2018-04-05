@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const CarController = require('../controllers/car');
-const authGaurd = require('../auth/auth');
+const authGaurd = require('../auth/school_auth');
 
 router.post('/addcar', authGaurd, CarController.addCar);
 router.post('/getcar', CarController.getCar);

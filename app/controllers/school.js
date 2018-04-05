@@ -1,8 +1,12 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../config');
 const School = require('../models/school');
 const Driver = require('../models/driver');
 
 module.exports = {
     addSchool: addSchool,
+    loginSchool:loginSchool,
     getSchool: getSchool,
     getSingleSchool:getSingleSchool,
     updateSchool: updateSchool,
@@ -14,6 +18,7 @@ function addSchool(req, res) {
     let school = new School({
         name:              req.body.name,
         email:             req.body.email,
+        password:          req.body.password,
         mobile:            req.body.mobile,
         address:           req.body.address,
         city:              req.body.city,
@@ -22,19 +27,63 @@ function addSchool(req, res) {
         registration_no:   req.body.registration_no,
         license_no:        req.body.license_no
     });
-
-    school.save(school).then((response) => {
-        res.status(200);
-        return res.json({
-            success: true,
-            message: 'School has been saved successfully !',
-            data: response
+    bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(school.password, salt, function (err, hash) {
+            school.password = hash;
+            school.save(school).then((response) => {
+                res.status(200);
+                return res.json({
+                    success: true,
+                    message: 'School has been saved successfully !',
+                    data: response
+                });
+            }).catch((error) => {
+                res.status(400);
+                return res.json({
+                    success: false,
+                    message: 'Unable to save School !',
+                    error: error
+                });
+            });
         });
-    }).catch((error) => {
+    });
+}
+
+function loginSchool(req, res){
+    if(!req.body.email || !req.body.password){
         res.status(400);
         return res.json({
-            success: false,
-            message: 'Unable to save School !',
+            success:false,
+            message:"Email and password is required !"
+        });
+    }
+    School.findOne({ email: req.body.email }).then((response)=>{
+        if(bcrypt.compareSync(req.body.password, response.password)){
+            var payload = {
+                _id: response._id,
+                email: response.email
+            }
+            var token = jwt.sign({ data: payload }, config.school_admin_secret, { expiresIn: config.token_expire });
+            res.status(200);
+            return res.json({
+                success:true,
+                message:"Logged in successfully !",
+                token: token,
+                data: response
+            });
+        }
+        else{
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Your password is incorrect, Please try again !"
+            });
+        }
+    }).catch((error)=>{
+        res.status(400);
+        return res.json({
+            success:false,
+            message:"Unable to login, Please try again !",
             error: error
         });
     });

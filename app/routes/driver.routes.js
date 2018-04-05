@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const DriverController = require('../controllers/driver');
-const authGaurd = require('../auth/auth');
+const authGaurd = require('../auth/school_auth');
 
 router.post('/adddriver', authGaurd, DriverController.addDriver);
 router.post('/getdriver', DriverController.getDriver);
+router.post('/login', DriverController.loginDriver);
 router.post('/updatedriver', authGaurd, DriverController.updateDriver);
 router.post('/removedriver', authGaurd, DriverController.removeDriver);
 

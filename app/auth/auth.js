@@ -1,9 +1,7 @@
 var jwt = require('jsonwebtoken');
 var User = require('../models/user');
-var Car = require('../models/car');
 var Package = require('../models/package');
 var School = require('../models/school');
-var Driver = require('../models/driver');
 const Country = require('../models/country');
 const State = require('../models/state');
 const City = require('../models/city');
@@ -12,7 +10,7 @@ var config = require('../config');
 function auth(req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
-        jwt.verify(token, config.admin_token_secret, function (err, decoded) {
+        jwt.verify(token, config.super_admin_secret, function (err, decoded) {
             if (err) {
                 res.status(400);
                 return res.json({ 

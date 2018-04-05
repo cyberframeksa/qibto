@@ -1,8 +1,12 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../config');
 const Driver = require('../models/driver');
 
 module.exports = {
     addDriver: addDriver,
     getDriver: getDriver,
+    loginDriver: loginDriver,
     updateDriver: updateDriver,
     removeDriver: removeDriver
 };
@@ -20,19 +24,63 @@ function addDriver(req, res) {
         country:            req.body.country,
         school:             req.body.school
     });
-
-    driver.save(driver).then((response) => {
-        res.status(200);
-        return res.json({
-            success: true,
-            message: 'Driver has been saved successfully !',
-            data: response
+    bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(driver.password, salt, function (err, hash) {
+            driver.password = hash;
+            driver.save(driver).then((response) => {
+                res.status(200);
+                return res.json({
+                    success: true,
+                    message: 'Driver has been saved successfully !',
+                    data: response
+                });
+            }).catch((error) => {
+                res.status(400);
+                return res.json({
+                    success: false,
+                    message: 'Unable to save driver !',
+                    error: error
+                });
+            });
         });
-    }).catch((error) => {
+    });
+}
+
+function loginDriver(req, res){
+    if(!req.body.email || !req.body.password){
         res.status(400);
         return res.json({
-            success: false,
-            message: 'Unable to save driver !',
+            success:false,
+            message:"Email and password is required !"
+        });
+    }
+    Driver.findOne({ email: req.body.email }).then((response)=>{
+        if(bcrypt.compareSync(req.body.password, response.password)){
+            var payload = {
+                _id: response._id,
+                email: response.email
+            }
+            var token = jwt.sign({ data: payload }, config.school_driver_secret, { expiresIn: config.token_expire });
+            res.status(200);
+            return res.json({
+                success:true,
+                message:"Logged in successfully !",
+                token: token,
+                data: response
+            });
+        }
+        else{
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Your password is incorrect, Please try again !"
+            });
+        }
+    }).catch((error)=>{
+        res.status(400);
+        return res.json({
+            success:false,
+            message:"Unable to login, Please try again !",
             error: error
         });
     });
