@@ -22,8 +22,6 @@ function addBooking(req, res, next) {
         status:  req.body.status,
         car: req.body.car,
         package: req.body.package,
-        school: req.body.school,
-        driver: req.body.driver,
         user: req.body.user
     });
 
@@ -54,7 +52,7 @@ function getBooking(req, res, next){
         });
     }
     else{
-        Booking.findById(req.body._id).populate('car package school driver user').exec(function (err, booking) {
+        Booking.findById(req.body._id).populate('car package').exec(function (err, booking) {
             if (err){
                 res.status(400);
                 return res.json({
@@ -84,7 +82,7 @@ function getBooking(req, res, next){
 
 function getAllBooking(req, res){
     let data = req.body.data || {};
-    Booking.find(data).populate('car package school driver user').exec(function(err, booking) {
+    Booking.find(data).populate('car package').exec(function(err, booking) {
         if(err){
             res.status(400);
             return res.json({

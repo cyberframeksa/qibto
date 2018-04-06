@@ -58,7 +58,23 @@ function loginSchool(req, res){
         });
     }
     School.findOne({ email: req.body.email }).then((response)=>{
-        if(bcrypt.compareSync(req.body.password, response.password)){
+        var match = bcrypt.compareSync(req.body.password, response.password);
+        var verified = response.isVerified;
+        if(!match){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Your password is incorrect, Please try again !"
+            });
+        }
+        if(!verified){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Your account is not verified, Please contact admin for verification !"
+            });
+        }
+        else{
             var payload = {
                 _id: response._id,
                 email: response.email
@@ -70,13 +86,6 @@ function loginSchool(req, res){
                 message:"Logged in successfully !",
                 token: token,
                 data: response
-            });
-        }
-        else{
-            res.status(400);
-            return res.json({
-                success:false,
-                message:"Your password is incorrect, Please try again !"
             });
         }
     }).catch((error)=>{
