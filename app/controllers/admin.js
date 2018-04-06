@@ -69,7 +69,7 @@ function loginAdmin(req, res){
                 _id: response._id,
                 email: response.email
             }
-            var token = jwt.sign({ data: payload }, config.admin_token_secret, { expiresIn: config.token_expire });
+            var token = jwt.sign({ data: payload }, config.super_admin_secret, { expiresIn: config.token_expire });
             res.status(200);
             return res.json({
                 success:true,
