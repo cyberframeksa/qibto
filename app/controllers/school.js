@@ -14,7 +14,22 @@ module.exports = {
 };
 
 function addSchool(req, res) {
-
+    var logo_path = null;
+    var license_image_path = null;
+    
+    if(req.files.logo[0].filename!=null){
+        logo_path = `http://node.cyberframe.in/images/${req.files.logo[0].filename}`;
+    }
+    else{
+        logo_path = null;
+    }
+    if(req.files.license_image[0].filename!=null){
+        license_image_path = `http://node.cyberframe.in/images/${req.files.license_image[0].filename}`;
+    }
+    else{
+        license_image_path = null;
+    }
+    
     let school = new School({
         name:              req.body.name,
         email:             req.body.email,
@@ -25,8 +40,12 @@ function addSchool(req, res) {
         state:             req.body.state,
         country:           req.body.country,
         registration_no:   req.body.registration_no,
-        license_no:        req.body.license_no
+        license_no:        req.body.license_no,
+        logo:              logo_path,
+        license_image:     license_image_path,
+        alt_mobile:        req.body.alt_mobile
     });
+    
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(school.password, salt, function (err, hash) {
             school.password = hash;

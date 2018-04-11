@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 module.exports = mongoose.model('Package', new Schema({
-    car_id:            {type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true},
+    car:               {type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true},
     plan_name:         {type: String, required:true },
     pick_drop:         {type: String, required:true },
     drive_daily:       {type: Number, required:true },

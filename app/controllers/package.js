@@ -1,4 +1,5 @@
 const Package = require('../models/package');
+const Car = require('../models/car');
 const config = require('../config');
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
 function addPackage(req, res, next) {
 
     var newPackage = new Package({
-        car_id:     req.body.car_id,
+        car:     req.body.car,
         plan_name:  req.body.plan_name,
         pick_drop:  req.body.pick_drop,
         drive_daily: req.body.drive_daily,
@@ -38,7 +39,7 @@ function addPackage(req, res, next) {
 }
 
 function getPackage(req, res){
-    Package.find(req.body).populate('car').exec(function (err, pack) {
+    Package.find(req.body).populate('car').exec(function(err, pack) {
         if(err){
             res.status(400);
             return res.json({
