@@ -82,7 +82,7 @@ function getBooking(req, res, next){
 
 function getAllBooking(req, res){
     let data = req.body.data || {};
-    Booking.find(data).populate('car package').exec(function(err, booking) {
+    Booking.find(data).populate('car package').sort({ updatedAt : -1}).exec(function(err, booking) {
         if(err){
             res.status(400);
             return res.json({

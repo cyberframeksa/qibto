@@ -9,6 +9,7 @@ const worldRoutes = require('./world.routes');
 const schoolRoutes = require('./school.routes');
 const driverRoutes = require('./driver.routes');
 const bookingRoutes = require('./booking.routes');
+const notificationRoutes = require('./notification.routes');
 
 routes.use('/admin', adminRoutes);
 routes.use('/users', userRoutes);
@@ -18,6 +19,7 @@ routes.use('/world', worldRoutes);
 routes.use('/school', schoolRoutes);
 routes.use('/driver', driverRoutes);
 routes.use('/booking', bookingRoutes);
+routes.use('/notification', notificationRoutes);
 
 routes.get('/', function(req, res){ 
     res.status(200);

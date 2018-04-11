@@ -3,6 +3,7 @@ var User = require('../models/user');
 var Package = require('../models/package');
 var School = require('../models/school');
 var Booking = require('../models/booking');
+var Notification = require('../models/notification');
 const Country = require('../models/country');
 const State = require('../models/state');
 const City = require('../models/city');

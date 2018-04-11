@@ -1,5 +1,6 @@
 var jwt = require('jsonwebtoken');
 var Booking = require('../models/booking');
+var Notification = require('../models/notification');
 var config = require('../config');
 
 function user_auth(req, res, next) {
