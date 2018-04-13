@@ -301,6 +301,7 @@ function updateProfileUser(req, res){
                                         error:err
                                     });
                                 }
+                                user.password = '';
                                 res.status(200);
                                 return res.json({
                                     success:true,
@@ -375,6 +376,7 @@ function changePasswordUser(req, res){
                                                 error:err
                                             });
                                         }
+                                        user.password = '';
                                         res.status(200);
                                         return res.json({
                                             success: true,

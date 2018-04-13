@@ -25,14 +25,7 @@ module.exports = mongoose.model('User', new Schema({
                         },
     alt_mobile:         {
                             type: Number,
-                            default:null, 
-                            // validate: {
-                            //     validator: function(v) {
-                            //         var re = /^\d{10}$/;
-                            //         return (re.test(v));
-                            //     },
-                            //     message: 'User alternate mobile number is invalid !'
-                            // }
+                            default:null
                         },
     email:              {
                             type: String,
@@ -44,7 +37,7 @@ module.exports = mongoose.model('User', new Schema({
                             match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
                             required: [true, 'User email address is required !']
                         },
-    password:           {type: String, default:null, select: false },
+    password:           {type: String, default:null },
     address:            {type: String, required:true },
     area:               {type: String, default:null },
     city:               {type: String, default:null },
@@ -52,14 +45,7 @@ module.exports = mongoose.model('User', new Schema({
     country:            {type: String, default:null },
     pincode:            {
                             type: Number,
-                            default:null,
-                            // validate: {
-                            //     validator: function(v) {
-                            //         var re = /^\d{6}$/;
-                            //         return (re.test(v));
-                            //     },
-                            //     message: 'User pincode is invalid !'
-                            // }
+                            default:null
                         },
     l_license:          {type: String, default:null },
     aadhar:             {type: Number, default:null },
@@ -69,14 +55,7 @@ module.exports = mongoose.model('User', new Schema({
     trainer_name:       {type: String, default:null },
     trainer_mobile:     {
                             type: Number,
-                            default:null, 
-                            // validate: {
-                            //     validator: function(v) {
-                            //         var re = /^\d{10}$/;
-                            //         return (re.test(v));
-                            //     },
-                            //     message: 'Trainer mobile number is invalid !'
-                            // }
+                            default:null
                         },
     course_duration:    {type: Number, default:null },
     training_time:      {type: String, default:null },

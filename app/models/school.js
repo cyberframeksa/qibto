@@ -5,7 +5,7 @@ module.exports = mongoose.model('School', new Schema({
     logo:              {type: String, default:null },
     name:              {type: String, required:true},
     email:             {type: String, required:true},
-    password:          {type: String, required:true, select: false },
+    password:          {type: String, required:true},
     mobile:            {type: Number, required:true},
     alt_mobile:        {type: Number, default:null },
     address:           {type: String, required:true},
