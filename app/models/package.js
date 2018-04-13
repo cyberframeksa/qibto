@@ -7,7 +7,8 @@ module.exports = mongoose.model('Package', new Schema({
     pick_drop:         {type: String, required:true },
     drive_daily:       {type: Number, required:true },
     plan_price:        {type: Number, required:true },
-    course_duration:   {type: Number, required:true }
+    course_duration:   {type: Number, required:true },
+    __v: { type: Number, select: false}
 }, 
 {
     timestamps: true,

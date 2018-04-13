@@ -44,7 +44,7 @@ module.exports = mongoose.model('User', new Schema({
                             match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
                             required: [true, 'User email address is required !']
                         },
-    password:           {type: String, default:null },
+    password:           {type: String, default:null, select: false },
     address:            {type: String, required:true },
     area:               {type: String, default:null },
     city:               {type: String, default:null },
@@ -80,7 +80,8 @@ module.exports = mongoose.model('User', new Schema({
                         },
     course_duration:    {type: Number, default:null },
     training_time:      {type: String, default:null },
-    training_location:  {type: String, default:null }
+    training_location:  {type: String, default:null },
+    __v: { type: Number, select: false}
 }, 
 {
     timestamps: true,

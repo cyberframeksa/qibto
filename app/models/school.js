@@ -5,7 +5,7 @@ module.exports = mongoose.model('School', new Schema({
     logo:              {type: String, default:null },
     name:              {type: String, required:true},
     email:             {type: String, required:true},
-    password:          {type: String, required:true},
+    password:          {type: String, required:true, select: false },
     mobile:            {type: Number, required:true},
     alt_mobile:        {type: Number, default:null },
     address:           {type: String, required:true},
@@ -16,7 +16,8 @@ module.exports = mongoose.model('School', new Schema({
     license_no:        {type: String, required:true},
     license_image:     {type: String, default:null },
     driver_list:       {type: Object, default:null },
-    isVerified:        {type:Boolean, default:false}
+    isVerified:        {type:Boolean, default:false},
+    __v: { type: Number, select: false}
 }, 
 {
     timestamps: true,

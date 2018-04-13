@@ -7,7 +7,8 @@ module.exports = mongoose.model('Booking', new Schema({
     status:            {type: String, required: true},
     car:               {type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true},
     package:           {type: mongoose.Schema.Types.ObjectId, ref: 'Package', required: true},
-    user:              {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
+    user:              {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    __v: { type: Number, select: false}
 }, 
 {
     timestamps: true,
