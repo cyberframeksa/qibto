@@ -292,7 +292,7 @@ function updateProfileUser(req, res){
                             });
                         }
                         else{
-                            User.findByIdAndUpdate(decoded.data._id, {$set: req.body.data}, {new:true}, (err, user) => {
+                            User.findByIdAndUpdate(decoded.data._id, {$set: req.body}, {new:true}, (err, user) => {
                                 if(err){
                                     res.status(400);
                                     return res.json({

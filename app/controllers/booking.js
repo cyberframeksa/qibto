@@ -4,7 +4,7 @@ const Driver = require('../models/driver');
 const Car = require('../models/car');
 const Package = require('../models/package');
 const User = require('../models/user');
-
+const Notification = require('../models/notification');
 const config = require('../config');
 
 module.exports = {
@@ -34,12 +34,25 @@ function addBooking(req, res, next) {
                 error:err
             });
         }
-        res.status(200);
-        return res.json({
-            success: true,
-            message: 'Booking added successfully !',
-            data: booking
-        });
+        else
+        {
+            var newNotification = new Notification({
+                booking_id: booking._id,
+                user_id:  booking.user,
+                message:  `We have found an new booking with an amount of ${booking.amount}`
+            });
+        
+            newNotification.save((err, notification) => {
+                res.status(200);
+                return res.json({
+                    success: true,
+                    message: 'Booking added successfully !',
+                    data: {
+                        booking:booking,
+                        notification: notification}
+                });
+            });
+        }
     });
 }
 

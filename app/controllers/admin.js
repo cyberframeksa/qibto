@@ -16,43 +16,27 @@ function registerAdmin(req, res) {
         password:           req.body.password
     });
 
-    if(req.body.super_admin_secret_code==undefined || req.body.super_admin_secret_code==null){
-        res.status(400);
-        return res.json({
-            success: false,
-            message: 'Please provide admin super secret code !'
-        });
-    }
-    else if(config.super_admin_secret_code == req.body.super_admin_secret_code){
-        bcrypt.genSalt(10, function (err, salt) {
-            bcrypt.hash(admin.password, salt, function (err, hash) {
-                admin.password = hash;
-                admin.save(admin).then((response) => {
-                    res.status(200);
-                    return res.json({
-                        success: true,
-                        message: 'Admin added successfully !',
-                        data: response
-                    });
-                }).catch((error) => {
-                    res.status(400);
-                    return res.json({
-                        success: false,
-                        message: 'Unable to add admin !',
-                        error: error
-                    });
+    bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(admin.password, salt, function (err, hash) {
+            admin.password = hash;
+            admin.save(admin).then((response) => {
+                res.status(200);
+                return res.json({
+                    success: true,
+                    message: 'Admin added successfully !',
+                    data: response
+                });
+            }).catch((error) => {
+                res.status(400);
+                return res.json({
+                    success: false,
+                    message: 'Unable to add admin !',
+                    error: error
                 });
             });
         });
-    }
-    else
-    {
-        res.status(400);
-        return res.json({
-            success: false,
-            message: 'Admin super secret code does not match !'
-        });
-    } 
+    });
+    
 }
 
 function loginAdmin(req, res){

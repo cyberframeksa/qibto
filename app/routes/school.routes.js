@@ -16,8 +16,8 @@ const upload = multer({storage: storage});
 
 router.post('/addschool', upload.fields([{name: 'logo', maxCount: 1}, {name: 'license_image', maxCount: 1}]), SchoolController.addSchool);
 router.post('/admin/login', SchoolController.loginSchool);
-router.post('/getschool', SchoolController.getSchool);
-router.post('/getsingleschool', SchoolController.getSingleSchool);
+router.post('/getschool', authGaurd, SchoolController.getSchool);
+router.post('/getsingleschool', authGaurd, SchoolController.getSingleSchool);
 router.post('/updateschool', authGaurd, SchoolController.updateSchool);
 router.post('/removeschool', authGaurd, SchoolController.removeSchool);
 

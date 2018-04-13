@@ -118,9 +118,9 @@ function loginSchool(req, res){
 }
 
 function getSchool(req, res) {
-    let query = req.body || {};
-    if(req.body._id){
-        School.findById(req.body._id).then((response) => {
+    let data = req.body.data || {};
+    if(data._id){
+        School.findById(data._id).then((response) => {
             Driver.find({school: response._id}).then((drivers)=>{
                 response.driver_list = drivers;
                 res.status(200);
@@ -148,7 +148,7 @@ function getSchool(req, res) {
     }
     else
     {
-        School.find(query).then((response) => {
+        School.find(data).then((response) => {
             res.status(200);
             return res.json({
                 success: true,

@@ -15,6 +15,7 @@ function addPackage(req, res, next) {
         car:     req.body.car,
         plan_name:  req.body.plan_name,
         pick_drop:  req.body.pick_drop,
+        ac_non_ac:  req.body.ac_non_ac,
         drive_daily: req.body.drive_daily,
         plan_price: req.body.plan_price,
         course_duration: req.body.course_duration

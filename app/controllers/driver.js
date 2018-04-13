@@ -87,8 +87,8 @@ function loginDriver(req, res){
 }
 
 function getDriver(req, res) {
-    let query = req.body || {};
-    Driver.find(query).populate('school').then((response) => {
+    let data = req.body.data || {};
+    Driver.find(data).populate('school').then((response) => {
         res.status(200);
         return res.json({
             success: true,

@@ -11,9 +11,8 @@ module.exports = {
 function addCar(req, res, next) {
     var newCar = new Car({
         car_brand: req.body.car_brand,
-        car_type:  req.body.car_type,
         car_name:  req.body.car_name,
-        pickup_drop_price: req.body.pickup_drop_price
+        car_type:  req.body.car_type        
     });
 
     newCar.save((err, car) => {
