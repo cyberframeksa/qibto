@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const CarController = require('../controllers/car');
-const authGaurd = require('../auth/school_auth');
+const commonAuthGaurd = require('../auth/common_auth');
 
-router.post('/addcar', authGaurd, CarController.addCar);
-router.post('/getcar', CarController.getCar);
-router.post('/updatecar', authGaurd, CarController.updateCar);
-router.post('/removecar', authGaurd, CarController.removeCar);
+router.post('/addcar', commonAuthGaurd, CarController.addCar);
+router.post('/getcar', commonAuthGaurd, CarController.getCar);
+router.post('/updatecar', commonAuthGaurd, CarController.updateCar);
+router.post('/removecar', commonAuthGaurd, CarController.removeCar);
 
 router.get('/', function (req, res, next) {
     res.status(200);
