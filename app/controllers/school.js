@@ -96,7 +96,8 @@ function loginSchool(req, res){
         else{
             var payload = {
                 _id: response._id,
-                email: response.email
+                email: response.email,
+                role:'school'
             }
             var token = jwt.sign({ data: payload }, config.school_admin_secret, { expiresIn: config.token_expire });
             res.status(200);

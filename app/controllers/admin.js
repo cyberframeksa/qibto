@@ -51,7 +51,8 @@ function loginAdmin(req, res){
         if(bcrypt.compareSync(req.body.password, response.password)){
             var payload = {
                 _id: response._id,
-                email: response.email
+                email: response.email,
+                role:'admin'
             }
             var token = jwt.sign({ data: payload }, config.super_admin_secret, { expiresIn: config.token_expire });
             res.status(200);

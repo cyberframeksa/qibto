@@ -150,7 +150,8 @@ function signInUser(req, res){
             if(bcrypt.compareSync(req.body.password, user.password)){
                 var payload = {
                     _id: user._id,
-                    email: user.email
+                    email: user.email,
+                    role:'user'
                 }
                 var token = jwt.sign({ data: payload }, config.token_secret, { expiresIn: config.token_expire });
                 user.password = '';
