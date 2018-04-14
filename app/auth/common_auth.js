@@ -3,10 +3,9 @@ var config = require('../config');
 var jwtDecode = require('jwt-decode');
 
 function common_auth(req, res, next) {
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    var decoded = jwtDecode(token);
-    
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];    
     if(token){
+        var decoded = jwtDecode(token);        
         if(decoded.data.role=='admin'){
             jwt.verify(token, config.super_admin_secret, function (err, decoded) {
                 if(err){
