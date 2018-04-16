@@ -9,7 +9,8 @@ module.exports = mongoose.model('Package', new Schema({
     drive_daily:       {type: Number, required:true },
     plan_price:        {type: Number, required:true },
     course_duration:   {type: Number, required:true },
-    __v: { type: Number, select: false}
+      status:              { type: Number, default:0},
+        __v: { type: Number, select: false}
 }, 
 {
     timestamps: true,

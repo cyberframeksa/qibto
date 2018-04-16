@@ -9,9 +9,9 @@ var validateEmail = function(email) {
 module.exports = mongoose.model('User', new Schema({
     first_name:         {type: String, required:true },
     last_name:          {type: String, required:true },
-    gender:             {type: String, required:true },
+    gender:             {type: String, default:null },
     blood_group:        {type: String, default:null },
-    dob:                {type: String, required:true },
+    dob:                {type: String, default:null },
     mobile:             {
                             type: Number, 
                             validate: {
@@ -37,8 +37,8 @@ module.exports = mongoose.model('User', new Schema({
                             match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
                             required: [true, 'User email address is required !']
                         },
-    password:           {type: String, default:null },
-    address:            {type: String, required:true },
+    password:           {type: String, required:true },
+    address:            {type: String, default:null },
     area:               {type: String, default:null },
     city:               {type: String, default:null },
     state:              {type: String, default:null },
@@ -60,7 +60,8 @@ module.exports = mongoose.model('User', new Schema({
     course_duration:    {type: Number, default:null },
     training_time:      {type: String, default:null },
     training_location:  {type: String, default:null },
-    __v: { type: Number, select: false}
+      status:              { type: Number, default:0},
+        __v: { type: Number, select: false}
 }, 
 {
     timestamps: true,

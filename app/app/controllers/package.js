@@ -40,7 +40,7 @@ function addPackage(req, res, next) {
 }
 
 function getPackage(req, res){
-    Package.find(req.body).populate('car').exec(function(err, pack) {
+    Package.find(req.body).populate('car').exec(function (err, pack) {
         if(err){
             res.status(400);
             return res.json({
@@ -133,7 +133,7 @@ function removePackage(req, res){
                     error:err
                 });
             }
-            if(!package){
+            if(!pack){
                 res.status(400);
                 return res.json({
                     success:false,

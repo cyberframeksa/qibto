@@ -16,14 +16,14 @@ module.exports = {
 function addSchool(req, res) {
     var logo_path = null;
     var license_image_path = null;
-    
-    if(req.files.logo[0].filename!=null){
+  
+    if(req.files!=undefined){
         logo_path = `http://node.cyberframe.in/images/${req.files.logo[0].filename}`;
     }
     else{
         logo_path = null;
     }
-    if(req.files.license_image[0].filename!=null){
+    if(req.files!=undefined){
         license_image_path = `http://node.cyberframe.in/images/${req.files.license_image[0].filename}`;
     }
     else{
@@ -31,6 +31,7 @@ function addSchool(req, res) {
     }
     
     let school = new School({
+        owner:             req.body.owner,
         name:              req.body.name,
         email:             req.body.email,
         password:          req.body.password,
@@ -46,10 +47,12 @@ function addSchool(req, res) {
         alt_mobile:        req.body.alt_mobile
     });
     
+    
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(school.password, salt, function (err, hash) {
             school.password = hash;
             school.save(school).then((response) => {
+                response.password = '';
                 res.status(200);
                 return res.json({
                     success: true,
@@ -100,6 +103,7 @@ function loginSchool(req, res){
                 role:'school'
             }
             var token = jwt.sign({ data: payload }, config.school_admin_secret, { expiresIn: config.token_expire });
+            response.password = '';
             res.status(200);
             return res.json({
                 success:true,
@@ -122,19 +126,18 @@ function getSchool(req, res) {
     let data = req.body.data || {};
     if(data._id){
         School.findById(data._id).then((response) => {
-            Driver.find({school: response._id}).then((drivers)=>{
-                response.driver_list = drivers;
+            Driver.find({school_id: response._id}).then((drivers)=>{
                 res.status(200);
                 return res.json({
                     success: true,
                     message: 'School fetched successfully !',
-                    data: response
+                    data: { school_data:response, driver_list: drivers }
                 });
             }).catch((error)=>{
                 res.status(400);
                 return res.json({
                     success:false,
-                    message:'Unable to fetch state !',
+                    message:'Unable to fetch school !',
                     error:error
                 });
             });
@@ -169,13 +172,12 @@ function getSchool(req, res) {
 
 function getSingleSchool(req, res){
     School.findById(req.body._id).then((response) => {
-        Driver.find({school: response._id}).then((drivers)=>{
-            response.driver_list = drivers;
+        Driver.find({school_id: response._id}).then((drivers)=>{
             res.status(200);
             return res.json({
                 success: true,
                 message: 'School fetched successfully !',
-                data: response
+                data: { school_data:response, driver_list: drivers }
             });
         }).catch((error)=>{
             res.status(400);
@@ -233,8 +235,7 @@ function removeSchool(req, res) {
             res.status(200);
             return res.json({
                 success: true,
-                message: 'School has been deleted successfully !',
-                data: response
+                message: 'School has been deleted successfully !'
             });
         }).catch((error) => {
             res.status(400);

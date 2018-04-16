@@ -16,22 +16,23 @@ function addCar(req, res, next) {
         pickup_drop:  req.body.pickup_drop,       
         pickup_drop_price:  req.body.pickup_drop_price,       
         ac_non_ac:  req.body.ac_non_ac,       
-        ac_non_ac_price:  req.body.ac_non_ac_price       
+        ac_non_ac_price:  req.body.ac_non_ac_price 
     });
 
-    newCar.save(newCar).then((response)=>{
+    newCar.save((err, car) => {
+        if(err){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Unable to add car !",
+                error:err
+            });
+        }
         res.status(200);
         return res.json({
             success: true,
             message: 'Car added successfully !',
-            data: response
-        });
-    }).catch((err)=>{
-        res.status(400);
-        return res.json({
-            success:false,
-            message:"Unable to add car !",
-            error:err
+            data: car
         });
     });
 }
@@ -72,7 +73,7 @@ function updateCar(req, res, next){
         res.status(400);
         return res.json({
             success:false,
-            message:'Unable to update, Unique id not found !'
+            message:'Unable to update car, Unique id(_id) not found !'
         });
     }
     else{
@@ -119,7 +120,7 @@ function removeCar(req, res, next){
         res.status(400);
         return res.json({
             success:false,
-            message:'Unable to remove, Unique id not found !'
+            message:'Unable to remove car, Unique id(_id) not found !'
         });
     }
     else{

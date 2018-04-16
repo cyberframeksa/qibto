@@ -22,7 +22,7 @@ function addDriver(req, res) {
         city:               req.body.city,
         state:              req.body.state,
         country:            req.body.country,
-        school:             req.body.school
+        school_id:          req.body.school_id
     });
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(driver.password, salt, function (err, hash) {
@@ -89,7 +89,7 @@ function loginDriver(req, res){
 
 function getDriver(req, res) {
     let data = req.body.data || {};
-    Driver.find(data).populate('school').then((response) => {
+    Driver.find(data).populate('school_id', 'name').then((response) => {
         res.status(200);
         return res.json({
             success: true,
@@ -144,8 +144,7 @@ function removeDriver(req, res) {
             res.status(200);
             return res.json({
                 success: true,
-                message: 'Driver has been deleted successfully !',
-                data: response
+                message: 'Driver has been deleted successfully !'
             });
         }).catch((error) => {
             res.status(400);

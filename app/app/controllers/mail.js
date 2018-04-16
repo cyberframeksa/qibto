@@ -13,18 +13,18 @@ function sendEmail(to, subject, html){
         nodemailer.createTestAccount((err, account) => {
 
             var transporter = nodemailer.createTransport(smtpTransport({
-                service: 'gmail',
-                host: 'smtp.gmail.com',
+                host: 'server.cyberframe.in',
+                port:465,
                 auth: {
-                    user: 'amit.dubey@cyberframe.in',
-                    pass: 'cyberframeksa'
+                    user: 'suyash@node.cyberframe.in',
+                    pass: 'SuyashGupta'
                 }
                 }));
 
             const token = uuidv4();
 
             let mailOptions = {
-                from: '"Admin " <amit.dubey@cyberframe.in>',
+                from: '"Admin " <suyash@node.cyberframe.in>',
                 to: to,
                 subject: subject,
                 html: html 

@@ -19,7 +19,8 @@ module.exports = mongoose.model('Admin', new Schema({
                             required: [true, 'Email address is required !']
                         },
     password:           {type: String, required: [true, 'Password is required !']},
-    __v: { type: Number, select: false}
+      status:              { type: Number, default:0},
+        __v: { type: Number, select: false }
 }, 
 {
     timestamps: true,

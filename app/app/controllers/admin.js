@@ -15,7 +15,7 @@ function registerAdmin(req, res) {
         email:              req.body.email,
         password:           req.body.password
     });
-
+    
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(admin.password, salt, function (err, hash) {
             admin.password = hash;
@@ -36,7 +36,6 @@ function registerAdmin(req, res) {
             });
         });
     });
-    
 }
 
 function loginAdmin(req, res){

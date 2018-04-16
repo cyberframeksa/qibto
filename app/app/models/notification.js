@@ -7,7 +7,8 @@ module.exports = mongoose.model('Notification', new Schema({
     message:          {type: String, required:true},
     status:           {type: String, default:'New'},
     isReolved:        {type: Boolean, default:false},
-    __v: { type: Number, select: false}
+      status:              { type: Number, default:0},
+        __v: { type: Number, select: false}
 }, 
 {
     timestamps: true,
