@@ -228,20 +228,20 @@ function removeSchool(req, res) {
         res.status(400);
         return res.json({
             success: false,
-            message: 'Unable to delete school, unique id(_id) not found !'
+            message: 'Unable to remove school, unique id(_id) not found !'
         });
     } else {
         School.findByIdAndRemove(req.body._id).then((response) => {
             res.status(200);
             return res.json({
                 success: true,
-                message: 'School has been deleted successfully !'
+                message: 'School has been removed successfully !'
             });
         }).catch((error) => {
             res.status(400);
             return res.json({
                 success: false,
-                message: 'Unable to delete school !',
+                message: 'Unable to remove school !',
                 error: error
             });
         });

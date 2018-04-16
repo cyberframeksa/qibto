@@ -120,7 +120,7 @@ function removePackage(req, res){
         res.status(400);
         return res.json({
             success:false,
-            message:'Unable to update, Unique id not found !'
+            message:'Unable to remove, Unique id not found !'
         });
     }
     else{
@@ -137,7 +137,7 @@ function removePackage(req, res){
                 res.status(400);
                 return res.json({
                     success:false,
-                    message:"Unable to delete, Package not found !",
+                    message:"Unable to remove, Package not found !",
                 });
             }
             else{
@@ -153,7 +153,7 @@ function removePackage(req, res){
                     res.status(200);
                     return res.json({
                         success:true,
-                        message:"Package deleted successfully !",
+                        message:"Package removed successfully !",
                     });
                 });
             }

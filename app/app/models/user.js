@@ -9,9 +9,9 @@ var validateEmail = function(email) {
 module.exports = mongoose.model('User', new Schema({
     first_name:         {type: String, required:true },
     last_name:          {type: String, required:true },
-    gender:             {type: String, default:null },
+    gender:             {type: String, required:true },
     blood_group:        {type: String, default:null },
-    dob:                {type: String, default:null },
+    dob:                {type: String, required:true },
     mobile:             {
                             type: Number, 
                             validate: {
@@ -23,10 +23,7 @@ module.exports = mongoose.model('User', new Schema({
                             },
                             required:  [true, 'User mobile number is required !'] 
                         },
-    alt_mobile:         {
-                            type: Number,
-                            default:null
-                        },
+    alt_mobile:         {type: Number, default:null },
     email:              {
                             type: String,
                             trim: true,
@@ -43,24 +40,18 @@ module.exports = mongoose.model('User', new Schema({
     city:               {type: String, default:null },
     state:              {type: String, default:null },
     country:            {type: String, default:null },
-    pincode:            {
-                            type: Number,
-                            default:null
-                        },
+    pincode:            {type: Number,default:null  },
     l_license:          {type: String, default:null },
     aadhar:             {type: Number, default:null },
     joining_date:       {type: String, default:null },
-    car_name:           {type: String, default:null },
     car_no:             {type: String, default:null },
+    car_name:           {type: String, default:null },
     trainer_name:       {type: String, default:null },
-    trainer_mobile:     {
-                            type: Number,
-                            default:null
-                        },
+    trainer_mobile:     {type: Number,default:null  },
     course_duration:    {type: Number, default:null },
     training_time:      {type: String, default:null },
     training_location:  {type: String, default:null },
-      status:              { type: Number, default:0},
+    status:             {type: Number, default:0},
         __v: { type: Number, select: false}
 }, 
 {

@@ -37,7 +37,7 @@ function signUpUser(req, res) {
             res.status(400);
             return res.json({
                 success:false,
-                message:`User ${user.email} already exits !`,
+                message:`User ${user.email} already exist !`,
                 data:null
             });
         }
@@ -111,6 +111,7 @@ function signUpUser(req, res) {
                         res.status(400);
                         return res.json({
                             success:false,
+                            message: 'Unable to register user, Please try after sometime !',
                             error: err
                         });
                     });
@@ -613,7 +614,7 @@ function removeUser(req, res){
                             res.status(400);
                             return res.json({
                                 success:false,
-                                message:"Unable to delete, Car not found !",
+                                message:"Unable to remove, User not found !",
                             });
                         }
                         else{
@@ -622,7 +623,7 @@ function removeUser(req, res){
                                 res.status(200);
                                 return res.json({
                                     success:true,
-                                    message:"User deleted successfully !",
+                                    message:"User removed successfully !",
                                 });
                             });
                         }

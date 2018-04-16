@@ -17,6 +17,7 @@ module.exports = mongoose.model('School', new Schema({
     logo:              {type: String, default:null},   
     alt_mobile:        {type: Number, default:null },     
     isVerified:        {type:Boolean, default:false},
+    status:            {type:Number, default:0 },
     __v: { type: Number, select: false}
 }, 
 {
