@@ -19,10 +19,11 @@ module.exports = mongoose.model('Admin', new Schema({
                             required: [true, 'Email address is required !']
                         },
     password:           {type: String, required: [true, 'Password is required !']},
-      status:              { type: Number, default:0},
-        __v: { type: Number, select: false }
+    created_at:         {type: Date, default:new Date()},
+    updated_at:         {type: Date, default:new Date()},
+    status:             { type: Number, default:0},
+    __v:                { type: Number, select: false }
 }, 
 {
-    timestamps: true,
     collection: 'Admin'
 }));

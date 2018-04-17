@@ -32,7 +32,7 @@ function sendEmail(to, subject, html){
 
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                    reject(false);
+                    resolve(false);
                 }
                 else{
                     resolve(true);

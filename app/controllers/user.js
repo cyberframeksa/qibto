@@ -37,8 +37,7 @@ function signUpUser(req, res) {
             res.status(400);
             return res.json({
                 success:false,
-                message:`User ${user.email} already exist !`,
-                data:null
+                message:`User ${user.email} already exist !`
             });
         }
         else{
@@ -55,7 +54,7 @@ function signUpUser(req, res) {
                 bcrypt.hash(newUser.password, salt, function (err, hash) {
                     newUser.password = hash;
                     newUser.save((err, user) => {
-                        if (err){
+                        if(err){
                             res.status(400);
                             return res.json({
                                 success:false,
@@ -126,8 +125,7 @@ function signInUser(req, res){
         res.status(400);
         return res.json({
             success:false,
-            message:"Required field error !",
-            data:null
+            message:"Required field error !"
         });
     }
     User.findOne({ email: req.body.email }, (err, user) => {
@@ -143,15 +141,15 @@ function signInUser(req, res){
             res.status(400);
             return res.json({
                 success:false,
-                message:"User not found !",
-                data:null
+                message:"User not found !"
             });
         }
         else{
             if(bcrypt.compareSync(req.body.password, user.password)){
                 var payload = {
                     _id: user._id,
-                    email: user.email
+                    email: user.email,
+                    role:'user'
                 }
                 var token = jwt.sign({ data: payload }, config.token_secret, { expiresIn: config.token_expire });
                 user.password = '';
@@ -166,8 +164,7 @@ function signInUser(req, res){
                 res.status(400);
                 return res.json({
                     success:false,
-                    message:"Password doesn't match !",
-                    data: null
+                    message:"Password doesn't match !"
                 });
             }
         }
@@ -198,8 +195,7 @@ function getUser(req, res){
                         res.status(400);
                         return res.json({
                             success:false,
-                            message:"User not found !",
-                            data:null
+                            message:"User not found !"
                         });
                     }
                     else{
@@ -239,8 +235,7 @@ function getAllUsers(req, res){
             res.status(200);
             return res.json({
                 success:false,
-                message:"Users not found !",
-                data:null
+                message:"Users not found !"
             });
         }
         else{

@@ -16,13 +16,22 @@ module.exports = {
 }
 
 function addBooking(req, res, next) {
+
     var newBooking = new Booking({
         order_id: req.body.order_id,
         amount:  req.body.amount,
-        status:  req.body.status,
-        car: req.body.car,
-        package: req.body.package,
-        user: req.body.user
+        order_status:  req.body.order_status,
+        booking_type: req.body.booking_type,
+        car_id: req.body.car_id,
+        ac_availability: req.body.ac_availability,
+        puckup_drop: req.body.puckup_drop,
+        daily_drive: req.body.daily_drive,
+        course_duration: req.body.course_duration,        
+        package_id: req.body.package_id,
+        user_id: req.body.user_id,
+        current_driver_id: req.body.current_driver_id,
+        other_drivers: req.body.other_drivers,
+        training_time: req.body.training_time
     });
 
     newBooking.save((err, booking) => {
@@ -30,7 +39,7 @@ function addBooking(req, res, next) {
             res.status(400);
             return res.json({
                 success:false,
-                message:"Unable to add booking !",
+                message: "Unable to add booking !",
                 error:err
             });
         }
@@ -47,9 +56,7 @@ function addBooking(req, res, next) {
                 return res.json({
                     success: true,
                     message: 'Booking added successfully !',
-                    data: {
-                        booking:booking,
-                        notification: notification}
+                    data: { booking:booking, notification: notification }
                 });
             });
         }
@@ -65,7 +72,7 @@ function getBooking(req, res, next){
         });
     }
     else{
-        Booking.findById(req.body._id).populate('car package').exec(function (err, booking) {
+        Booking.findById(req.body._id).populate('car_id package_id').exec(function (err, booking) {
             if (err){
                 res.status(400);
                 return res.json({
@@ -95,7 +102,7 @@ function getBooking(req, res, next){
 
 function getAllBooking(req, res){
     let data = req.body.data || {};
-    Booking.find(data).populate('car package').sort({ updatedAt : -1}).exec(function(err, booking) {
+    Booking.find(data).populate('car_id package_id').sort({ updatedAt : -1}).exec(function(err, booking) {
         if(err){
             res.status(400);
             return res.json({

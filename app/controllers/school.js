@@ -21,13 +21,13 @@ function addSchool(req, res) {
         logo_path = `http://node.cyberframe.in/images/${req.files.logo[0].filename}`;
     }
     else{
-        logo_path = null;
+        logo_path = 'http://node.cyberframe.in/images/user.png';
     }
     if(req.files!=undefined){
         license_image_path = `http://node.cyberframe.in/images/${req.files.license_image[0].filename}`;
     }
     else{
-        license_image_path = null;
+        license_image_path = 'http://node.cyberframe.in/images/license.png';
     }
     
     let school = new School({

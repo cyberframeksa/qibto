@@ -6,10 +6,11 @@ module.exports = mongoose.model('Training', new Schema({
     schedule_date: {type: String, required:true},
     absent_date:   {type: String, required:true},
     present_date:  {type: String, required:true},
+    created_at:                     {type: Date, default:new Date()},
+    updated_at:                     {type: Date, default:new Date()},
       status:              { type: Number, default:0},
         __v: { type: Number, select: false}
 }, 
 {
-    timestamps: true,
     collection: 'Training'
 }));

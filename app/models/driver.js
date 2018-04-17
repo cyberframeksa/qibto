@@ -7,14 +7,12 @@ module.exports = mongoose.model('Driver', new Schema({
     password:          {type: String, required:true},
     mobile:            {type: Number, required:true},
     address:           {type: String, required:true},
-    city:              {type: String, required:true},
-    state:             {type: String, required:true},
-    country:           {type: String, required:true},
-    school_id:            {type: mongoose.Schema.Types.ObjectId, ref: 'School', required: true},
-      status:              { type: Number, default:0},
-        __v: { type: Number, select: false}
+    school_id:         {type: mongoose.Schema.Types.ObjectId, ref: 'School', required: true},
+    created_at:        {type: Date, default:new Date()},
+    updated_at:        {type: Date, default:new Date()},
+    status:            {type: Number, default:0},
+    __v:               {type: Number, select: false}
 }, 
 {
-    timestamps: true,
     collection: 'Driver'
 }));

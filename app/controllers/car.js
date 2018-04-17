@@ -13,10 +13,8 @@ function addCar(req, res, next) {
         school_id: req.body.school_id,
         car_brand_id:  req.body.car_brand_id,
         car_type_id:  req.body.car_type_id,
-        pickup_drop:  req.body.pickup_drop,       
-        pickup_drop_price:  req.body.pickup_drop_price,       
-        ac_non_ac:  req.body.ac_non_ac,       
-        ac_non_ac_price:  req.body.ac_non_ac_price 
+        car_name: req.body.car_name,
+        ac_availability: req.body.ac_availability
     });
 
     newCar.save((err, car) => {
@@ -52,8 +50,7 @@ function getCar(req, res){
             res.status(400);
             return res.json({
                 success:false,
-                message:"Unable to fetch, Car not found !",
-                data:null
+                message:"Unable to fetch, Car not found !"
             });
         }
         else{

@@ -8,19 +8,20 @@ module.exports = mongoose.model('School', new Schema({
     password:          {type: String, required:true},
     mobile:            {type: Number, required:true},
     address:           {type: String, required:true},
-    city:              {type: String, required:true},
-    state:             {type: String, required:true},
-    country:           {type: String, required:true},
+    city:              {type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true},
+    state:             {type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true},
+    country:           {type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true},
     registration_no:   {type: String, required:true},
     license_no:        {type: String, required:true},
     license_image:     {type: String, required:true},
-    logo:              {type: String, default:null},   
-    alt_mobile:        {type: Number, default:null },     
-    isVerified:        {type:Boolean, default:false},
-    status:            {type:Number, default:0 },
+    logo:              {type: String, default:null}, 
+    alt_mobile:        {type: Number, default:null},
+    created_at:        {type: Date, default:new Date()},
+    updated_at:        {type: Date, default:new Date()},     
+    isVerified:        {type: Number, default:0},
+    status:            {type: Number, default:0},
     __v: { type: Number, select: false}
 }, 
 {
-    timestamps: true,
     collection: 'School'
 }));

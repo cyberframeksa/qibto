@@ -11,7 +11,10 @@ function AddCarType(req, res){
     
     var cartype = new CarType({
         car_type: req.body.car_type,        
-        car_name: req.body.car_name
+        car_type_price: req.body.car_type_price,
+        ac_price: req.body.ac_price,
+        pickup_price: req.body.pickup_price,
+        daily_drive_price: req.body.daily_drive_price      
     });
 
     cartype.save(cartype).then((response)=>{

@@ -12,10 +12,10 @@ module.exports = {
 function addPackage(req, res, next) {
 
     var newPackage = new Package({
-        car:     req.body.car,
+        car_id:     req.body.car_id,
         plan_name:  req.body.plan_name,
         pick_drop:  req.body.pick_drop,
-        ac_non_ac:  req.body.ac_non_ac,
+        ac_availability:  req.body.ac_availability,
         drive_daily: req.body.drive_daily,
         plan_price: req.body.plan_price,
         course_duration: req.body.course_duration
@@ -40,7 +40,7 @@ function addPackage(req, res, next) {
 }
 
 function getPackage(req, res){
-    Package.find(req.body).populate('car').exec(function (err, pack) {
+    Package.find(req.body).populate('car_id').exec(function (err, pack) {
         if(err){
             res.status(400);
             return res.json({
@@ -53,8 +53,7 @@ function getPackage(req, res){
             res.status(400);
             return res.json({
                 success:false,
-                message:"Unable to fetch, Package not found !",
-                data:null
+                message:"Unable to fetch, Package not found !"
             });
         }
         else{
@@ -90,7 +89,7 @@ function updatePackage(req, res){
                 res.status(400);
                 return res.json({
                     success:false,
-                    message:"Unable to update, Package not found !",
+                    message:"Unable to update, Package not found !"
                 });
             }
             else{
@@ -137,7 +136,7 @@ function removePackage(req, res){
                 res.status(400);
                 return res.json({
                     success:false,
-                    message:"Unable to remove, Package not found !",
+                    message:"Unable to remove, Package not found !"
                 });
             }
             else{
@@ -153,7 +152,7 @@ function removePackage(req, res){
                     res.status(200);
                     return res.json({
                         success:true,
-                        message:"Package removed successfully !",
+                        message:"Package removed successfully !"
                     });
                 });
             }

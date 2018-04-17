@@ -19,11 +19,9 @@ function addDriver(req, res) {
         password:           req.body.password,
         mobile:             req.body.mobile,
         address:            req.body.address,
-        city:               req.body.city,
-        state:              req.body.state,
-        country:            req.body.country,
         school_id:          req.body.school_id
     });
+    
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(driver.password, salt, function (err, hash) {
             driver.password = hash;
