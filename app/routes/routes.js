@@ -12,6 +12,7 @@ const schoolRoutes = require('./school.routes');
 const driverRoutes = require('./driver.routes');
 const bookingRoutes = require('./booking.routes');
 const notificationRoutes = require('./notification.routes');
+const schoolsCarRoutes = require('./schoolscar.routes');
 
 routes.use('/admin', adminRoutes);
 routes.use('/users', userRoutes);
@@ -24,6 +25,7 @@ routes.use('/school', schoolRoutes);
 routes.use('/driver', driverRoutes);
 routes.use('/booking', bookingRoutes);
 routes.use('/notification', notificationRoutes);
+routes.use('/schoolscar', schoolsCarRoutes);
 
 routes.get('/', function(req, res){ 
     res.status(200);
