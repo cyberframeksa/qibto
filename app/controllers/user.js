@@ -49,7 +49,6 @@ function signUpUser(req, res) {
                 gender: req.body.gender,
                 mobile: req.body.mobile,
                 email: req.body.email,
-                address: req.body.address,
                 password: req.body.password
             });
             bcrypt.genSalt(10, function (err, salt) {

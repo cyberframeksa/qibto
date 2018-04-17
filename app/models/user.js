@@ -10,7 +10,6 @@ module.exports = mongoose.model('User', new Schema({
     first_name:         {type: String, required:true },
     last_name:          {type: String, required:true },
     gender:             {type: String, required:true },
-    blood_group:        {type: String, default:null },
     dob:                {type: String, required:true },
     mobile:             {
                             type: Number, 
@@ -23,7 +22,6 @@ module.exports = mongoose.model('User', new Schema({
                             },
                             required:  [true, 'User mobile number is required !'] 
                         },
-    alt_mobile:         {type: Number, default:null },
     email:              {
                             type: String,
                             trim: true,
@@ -35,6 +33,8 @@ module.exports = mongoose.model('User', new Schema({
                             required: [true, 'User email address is required !']
                         },
     password:           {type: String, required:true },
+    alt_mobile:         {type: Number, default:null },    
+    blood_group:        {type: String, default:null },    
     address:            {type: String, default:null },
     area:               {type: String, default:null },
     city:               {type: String, default:null },
@@ -52,7 +52,7 @@ module.exports = mongoose.model('User', new Schema({
     training_time:      {type: String, default:null },
     training_location:  {type: String, default:null },
     status:             {type: Number, default:0},
-        __v: { type: Number, select: false}
+    __v: { type: Number, select: false}
 }, 
 {
     timestamps: true,
