@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const fs = require('fs-extra');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
 const School = require('../models/school');
@@ -16,7 +17,7 @@ module.exports = {
 function addSchool(req, res) {
     var logo_path = null;
     var license_image_path = null;
-  
+
     if(req.files!=undefined){
         logo_path = `http://node.cyberframe.in/images/${req.files.logo[0].filename}`;
     }
@@ -46,7 +47,6 @@ function addSchool(req, res) {
         license_image:     license_image_path,
         alt_mobile:        req.body.alt_mobile
     });
-    
     
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(school.password, salt, function (err, hash) {

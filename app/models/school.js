@@ -18,7 +18,6 @@ module.exports = mongoose.model('School', new Schema({
     alt_mobile:        {type: Number, default:null},
     created_at:        {type: Date, default:new Date()},
     updated_at:        {type: Date, default:new Date()},     
-    isVerified:        {type: Number, default:0},
     status:            {type: Number, default:0},
     __v: { type: Number, select: false}
 }, 
