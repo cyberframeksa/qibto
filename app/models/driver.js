@@ -10,7 +10,7 @@ module.exports = mongoose.model('Driver', new Schema({
     school_id:         {type: mongoose.Schema.Types.ObjectId, ref: 'School', required: true},
     created_at:        {type: Date, default:new Date()},
     updated_at:        {type: Date, default:new Date()},
-    status:            {type: Number, default:0},
+    status:            {type: Number, default:1},
     __v:               {type: Number, select: false}
 }, 
 {

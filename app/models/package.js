@@ -11,7 +11,7 @@ module.exports = mongoose.model('Package', new Schema({
     course_duration:   {type: Number, required:true },
     created_at:        {type: Date, default:new Date()},
     updated_at:        {type: Date, default:new Date()},
-    status:            {type: Number, default:0},
+    status:            {type: Number, default:1},
     __v:               {type: Number, select: false}
 }, 
 {
