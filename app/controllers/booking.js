@@ -92,7 +92,7 @@ function getBooking(req, res, next){
                 res.status(200);
                 return res.json({
                     success:true,
-                    message:"Unable to fetch booking !",
+                    message:"Booking fetched successfully !",
                     data:booking
                 });
             }

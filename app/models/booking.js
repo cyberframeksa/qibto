@@ -8,7 +8,7 @@ module.exports = mongoose.model('Booking', new Schema({
     booking_type:      {type: Number, required: true},
     car_id:            {type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true},
     ac_availability:   {type: String, default:null},
-    puckup_drop:       {type: String, default:null},
+    pickup_drop:       {type: String, default:null},
     daily_drive:       {type: String, default:null},
     course_duration:   {type: String, default:null},
     package_id:        {type: mongoose.Schema.Types.ObjectId, ref: 'Package', required: true},

@@ -69,7 +69,7 @@ function updateNotification(req, res, next){
         res.status(400);
         return res.json({
             success:false,
-            message:'Unable to update, Unique id not found !'
+            message:'Unable to update notification, Unique id not found !'
         });
     }
     else{

@@ -81,7 +81,7 @@ function loginSchool(req, res){
     }
     School.findOne({ email: req.body.email }).then((response)=>{
         var match = bcrypt.compareSync(req.body.password, response.password);
-        var verified = response.isVerified;
+        var verified = response.status;
         if(!match){
             res.status(400);
             return res.json({

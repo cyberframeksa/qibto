@@ -10,7 +10,6 @@ module.exports = {
 
 function addCar(req, res, next) {
     var newCar = new Car({
-        school_id: req.body.school_id,
         car_brand_id:  req.body.car_brand_id,
         car_type_id:  req.body.car_type_id,
         car_name: req.body.car_name,
