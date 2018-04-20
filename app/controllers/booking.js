@@ -23,7 +23,7 @@ function addBooking(req, res, next) {
         order_status:  req.body.order_status,
         booking_type: req.body.booking_type,
         car_id: req.body.car_id,
-        ac_availability: req.body.ac_availability,
+        ac_non_ac: req.body.ac_non_ac,
         puckup_drop: req.body.puckup_drop,
         daily_drive: req.body.daily_drive,
         course_duration: req.body.course_duration,        
