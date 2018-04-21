@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const fs = require('fs-extra');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
 const School = require('../models/school');

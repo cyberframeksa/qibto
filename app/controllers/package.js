@@ -15,7 +15,7 @@ function addPackage(req, res, next) {
         car_id:     req.body.car_id,
         plan_name:  req.body.plan_name,
         pick_drop:  req.body.pick_drop,
-        ac_non_ac:  req.body.ac_non_ac,
+        ac_non_ac: req.body.ac_non_ac,
         drive_daily: req.body.drive_daily,
         plan_price: req.body.plan_price,
         course_duration: req.body.course_duration
@@ -39,7 +39,7 @@ function addPackage(req, res, next) {
     });
 }
 
-function getPackage(req, res) {
+function getPackage(req, res){
     var data = req.body.data || {};
     Package.find(data).populate('car_id').exec(function (err, pack) {
         if(err){

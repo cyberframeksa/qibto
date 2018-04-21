@@ -31,7 +31,9 @@ function addBooking(req, res, next) {
         user_id: req.body.user_id,
         current_driver_id: req.body.current_driver_id,
         other_drivers: req.body.other_drivers,
-        training_time: req.body.training_time
+        training_time: req.body.training_time,
+        start_date: req.body.start_date,
+        end_date: req.body.end_date
     });
 
     newBooking.save((err, booking) => {

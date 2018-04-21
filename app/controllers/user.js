@@ -4,6 +4,7 @@ const uuidv4 = require('uuid/v4');
 const generator = require('generate-password');
 
 const User = require('../models/user');
+const Booking = require('../models/booking');
 const Token = require('../models/token');
 const config = require('../config');
 const mailFunction = require('./mail');
@@ -222,32 +223,44 @@ function getUser(req, res){
     }
 }
 
-function getUsers(req, res){
-    User.find(req.body.data, (err, user) => {
-        if (err){
-            res.status(400);
-            return res.json({
-                success:false,
-                message:"Internal server error !",
-                error:err
-            });
-        }
-        if(!user){
-            res.status(200);
-            return res.json({
-                success:false,
-                message:"Users not found !"
-            });
-        }
-        else{
-            res.status(200);
-            return res.json({
-                success:true,
-                message:"Users fetched successfully !",
-                data: user
-            });
-        }
+function getBooking(data){
+    return new Promise((resolve, reject) => {
+        Booking.find({user_id: data}, 'package_id start_date end_date status').populate('package_id', 'plan_name').then((booking)=>{
+                 resolve({ booking });
+            }).catch((error)=>{ resolve(true); });
     });
+}
+
+function getUsers(req, res){
+   let data = req.body.data;
+   User.find(data, 'first_name last_name email mobile').then((res_one)=>{
+   var count=0;
+   var finalArray = new Array();
+   for(var i=0;i<res_one.length;i++){
+      
+        var user_details = res_one[i];
+        getBooking(res_one[i]._id).then((booking_history)=>{
+            finalArray.push({user_details, booking_history});
+            count++;
+            if(count==res_one.length){
+                res.status(200);
+                return res.json({
+                  success: true,
+                  message: 'Users fetched successfully !',
+                  data: finalArray
+                });
+             }
+        });
+    }
+    
+   }).catch((error)=>{
+       res.status(400);
+       return res.json({
+           success:false,
+           message:'Unable to fetch user!',
+           error: error
+       });
+   });
 }
 
 function getAllUsers(req, res){
