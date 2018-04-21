@@ -13,6 +13,7 @@ module.exports = {
     signUpUser: signUpUser,
     signInUser: signInUser,
     getUser: getUser,
+    getUsers: getUsers,
     getAllUsers: getAllUsers,
     updateProfileUser: updateProfileUser,
     changePasswordUser: changePasswordUser,
@@ -219,6 +220,34 @@ function getUser(req, res){
             error: error
         });
     }
+}
+
+function getUsers(req, res){
+    User.find(req.body.data, (err, user) => {
+        if (err){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Internal server error !",
+                error:err
+            });
+        }
+        if(!user){
+            res.status(200);
+            return res.json({
+                success:false,
+                message:"Users not found !"
+            });
+        }
+        else{
+            res.status(200);
+            return res.json({
+                success:true,
+                message:"Users fetched successfully !",
+                data: user
+            });
+        }
+    });
 }
 
 function getAllUsers(req, res){

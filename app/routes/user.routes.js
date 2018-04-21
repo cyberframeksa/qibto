@@ -6,6 +6,7 @@ const authGuard = require('../auth/auth');
 router.post('/signup', UserController.signUpUser);
 router.post('/signin', UserController.signInUser);
 router.post('/getuser', UserController.getUser);
+router.post('/getusers', authGuard, UserController.getUsers);
 router.post('/getallusers', authGuard, UserController.getAllUsers);
 router.post('/updateprofile', UserController.updateProfileUser);
 router.post('/changepassword', UserController.changePasswordUser);

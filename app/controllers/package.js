@@ -39,8 +39,9 @@ function addPackage(req, res, next) {
     });
 }
 
-function getPackage(req, res){
-    Package.find(req.body).populate('car_id').exec(function (err, pack) {
+function getPackage(req, res) {
+    var data = req.body.data || {};
+    Package.find(data).populate('car_id').exec(function (err, pack) {
         if(err){
             res.status(400);
             return res.json({
