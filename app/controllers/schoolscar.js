@@ -3,6 +3,7 @@ const SchoolsCar = require('../models/schoolscar');
 module.exports = {
     AddSchoolsCar:AddSchoolsCar,
     GetSchoolsCar:GetSchoolsCar,
+    GetUserSchoolsCar: GetUserSchoolsCar,
     UpdateSchoolsCar:UpdateSchoolsCar,
     RemoveSchoolsCar:RemoveSchoolsCar
 }
@@ -36,6 +37,25 @@ function AddSchoolsCar(req, res){
 function GetSchoolsCar(req, res){
     let data = req.body.data || {};
     SchoolsCar.find(data).then((response)=>{
+        res.status(200);
+        return res.json({
+            success:true,
+            message:'Schools car fetched successfully !',
+            data: response
+        });
+    }).catch((err)=>{
+        res.status(400);
+        return res.json({
+            success:false,
+            message:'Unable to fetch schools car !',
+            error: err
+        });
+    });
+}
+
+function GetUserSchoolsCar(req, res){
+    let data = req.body.data || {};
+    SchoolsCar.find(data).populate('car_id').then((response)=>{
         res.status(200);
         return res.json({
             success:true,
@@ -89,6 +109,20 @@ function UpdateSchoolsCar(req, res){
 }
 
 function RemoveSchoolsCar(req, res){
+    // SchoolsCar.remove().then((response)=>{
+    //     res.status(200);
+    //     return res.json({
+    //         success:true,
+    //         message: 'Schools car removed successfully !',
+    //     }); 
+    // }).catch((err)=>{
+    //     res.status(400);
+    //     return res.json({
+    //         success: false,
+    //         message: 'Unable to remove schools car !',
+    //         error: err
+    //     });
+    // });
     if(!req.body._id){
         res.status(400);
         return res.json({

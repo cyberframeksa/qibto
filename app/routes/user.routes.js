@@ -11,6 +11,8 @@ router.post('/getallusers', authGuard, UserController.getAllUsers);
 router.post('/updateprofile', UserController.updateProfileUser);
 router.post('/changepassword', UserController.changePasswordUser);
 router.post('/forgotpassword', UserController.forgotPasswordUser);
+router.post('/change', UserController.changePassword);
+router.post('/forgot', UserController.forgotPassword);
 router.get('/reset/:token', UserController.resetUser);
 router.post('/reset-password/:token', UserController.resetPasswordUser);
 router.post('/removeuser', UserController.removeUser);

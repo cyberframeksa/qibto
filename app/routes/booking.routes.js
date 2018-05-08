@@ -5,7 +5,9 @@ const authGaurdForUser = require('../auth/user_auth');
 const authGaurdForAdmin = require('../auth/auth');
 
 router.post('/addbooking', authGaurdForUser, BookingController.addBooking);
+router.post('/addcustombooking', authGaurdForUser, BookingController.customBooking);
 router.post('/getbooking', authGaurdForUser, BookingController.getBooking);
+router.post('/getuserbooking', authGaurdForUser, BookingController.getUserBooking);
 router.post('/getallbooking', authGaurdForAdmin, BookingController.getAllBooking);
 router.post('/updatebooking', authGaurdForAdmin, BookingController.updateBooking);
 router.post('/removebooking', authGaurdForAdmin, BookingController.removeBooking);

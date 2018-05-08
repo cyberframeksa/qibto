@@ -36,7 +36,7 @@ function addCar(req, res, next) {
 
 function getCar(req, res){
     var data = req.body.data || {};
-    Car.find(data).populate('car_brand_id',"brand_name").populate('car_type_id',"car_type").exec(function (err, car) {
+    Car.find(data).populate('car_brand_id',"brand_name").populate('car_type_id',"car_type car_type_price ac_price pickup_price daily_drive_price ").exec(function (err, car) {
         if(err){
             res.status(400);
             return res.json({

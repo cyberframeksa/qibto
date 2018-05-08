@@ -4,7 +4,7 @@ const CarController = require('../controllers/car');
 const commonAuthGaurd = require('../auth/common_auth');
 
 router.post('/addcar', commonAuthGaurd, CarController.addCar);
-router.post('/getcar', commonAuthGaurd, CarController.getCar);
+router.post('/getcar', CarController.getCar);
 router.post('/updatecar', commonAuthGaurd, CarController.updateCar);
 router.post('/removecar', commonAuthGaurd, CarController.removeCar);
 

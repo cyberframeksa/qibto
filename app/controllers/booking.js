@@ -1,16 +1,21 @@
 const Booking = require('../models/booking');
 const School = require('../models/school');
+const SchoolsCar = require('../models/schoolscar');
 const Driver = require('../models/driver');
 const Car = require('../models/car');
 const Package = require('../models/package');
 const User = require('../models/user');
 const Notification = require('../models/notification');
 const config = require('../config');
+var async = require('async');
+const crypto = require('crypto');
 
 module.exports = {
     addBooking: addBooking,
+    customBooking: customBooking,
     getBooking: getBooking,
-    getAllBooking:getAllBooking,
+    getAllBooking: getAllBooking,
+    getUserBooking: getUserBooking,
     updateBooking: updateBooking,
     removeBooking: removeBooking  
 }
@@ -23,15 +28,19 @@ function addBooking(req, res, next) {
         order_status:  req.body.order_status,
         booking_type: req.body.booking_type,
         car_id: req.body.car_id,
+        car_brand_id: req.body.car_brand_id,
+        car_type_id: req.body.car_type_id,
         ac_non_ac: req.body.ac_non_ac,
-        puckup_drop: req.body.puckup_drop,
+        pickup_drop: req.body.pickup_drop,
         daily_drive: req.body.daily_drive,
         course_duration: req.body.course_duration,        
         package_id: req.body.package_id,
         user_id: req.body.user_id,
+        school_id: req.body.school_id,
         current_driver_id: req.body.current_driver_id,
         other_drivers: req.body.other_drivers,
-        training_time: req.body.training_time,
+        time_preferred: req.body.time_preferred,
+        time_optional: req.body.time_optional,
         start_date: req.body.start_date,
         end_date: req.body.end_date
     });
@@ -65,6 +74,214 @@ function addBooking(req, res, next) {
     });
 }
 
+function getSchoolsCar(id){
+    return new Promise((resolve, reject)=>{
+        SchoolsCar.find({school_id: id}).then((element)=>{
+            console.log(element);
+            resolve(element);
+        }).catch((err)=>{
+            console.log(err);
+            resolve({});
+        });
+    });
+}
+
+function customBooking(req, res, next) {
+    
+    var lat = parseInt(req.body.latitude);
+    var lng = parseInt(req.body.longitude);
+
+    if(lat && lng){
+        let query = {
+            "latitude": { $gt: (lat - 1), $lt: (lat + 1) },
+            "longitude": { $gt: (lng - 1), $lt: (lng + 1) }
+        };
+        School.find(query).then((response) => {
+        
+            var length = response.length;
+         
+            if(length>0){
+            
+                var client_lat = parseFloat(req.body.latitude);
+                var client_lng = parseFloat(req.body.longitude);
+                var count = 0;
+                 var newArr = [];
+                 
+                async.forEach(response, (element_one, callback)=>{
+                    SchoolsCar.find({school_id: element_one._id}).populate('car_id').then((element_two)=>{
+                        
+                        count++;
+                        
+                        var server_lat = parseFloat(element_one.latitude);
+                        var server_lng = parseFloat(element_one.longitude);
+                    
+                        let radlat1 = Math.PI * client_lat / 180;
+                        let radlat2 = Math.PI * server_lat/180;
+                        let theta = client_lng-server_lng;
+                        let radtheta = Math.PI * theta / 180;
+                        let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+                        dist = Math.acos(dist);
+                        dist = dist * 180 / Math.PI;
+                        dist = dist * 60 * 1.1515;
+                        dist = dist * 1.609344;
+                    
+                        var data = {
+                            _id: element_one._id,
+                            name: element_one.name,
+                            address: element_one.address,
+                			longitude: element_one.longitude,
+                			latitude: element_one.latitude,
+                			distance: Math.ceil(dist),
+                            cars_list: []
+                        };
+                        
+                        var cars_list = [];
+                        element_two.forEach(element=>{
+                            var data = {
+                                car_id: element._id,
+                                school_id: element.school_id,
+                                car_brand_id: element.car_id.car_brand_id,
+                                car_type_id: element.car_id.car_type_id,
+                            };
+                            cars_list.push(data);
+                        })
+                        
+                        data.cars_list = cars_list;
+                        newArr.push(data);
+                        
+                        if(count==length){
+                            for(var i=0; i<newArr.length; i++){
+                                for(var j=0; j<newArr.length; j++){
+                                    if(newArr[i].distance<newArr[j].distance){
+                                        var temp = newArr[i];
+                                        newArr[i] = newArr[j];
+                                        newArr[j] = temp;
+                                    }
+                                }
+                            }
+                            
+                            var matched = {
+                                distance: null,
+                                car_id: null,
+                                school_id: null,
+                                car_brand_id: null,
+                                car_type_id: null
+                            };
+                            
+                            var matchCount=0;
+                            
+                            (newArr).forEach((cars)=>{
+                                (cars.cars_list).forEach((element)=>{
+                                    if((element.car_brand_id==req.body.car_brand_id) && (element.car_type_id==req.body.car_type_id) && (matchCount==0)){
+                                    matched.distance = cars.distance;
+                                    matched.car_id = element.car_id;
+                                    matched.school_id = element.school_id;
+                                    matched.car_brand_id = element.car_brand_id;
+                                    matched.car_type_id = element.car_type_id;
+                                    matchCount=1;
+                                    }
+                                });
+                            });
+                            
+                            if(matched.school_id!=null)
+                            {
+                                const order_id = crypto.randomBytes(10).toString('hex');
+                                
+                                var newBooking = new Booking({
+                                    
+                                    order_id: (`QIBTO-${order_id}`).toUpperCase(),
+                                    amount:  req.body.amount,
+                                    order_status:  'Pending',
+                                    booking_type: req.body.booking_type,
+                                    
+                                    user_id: req.body.user_id,
+                                    package_id: req.body.package_id,
+                                    
+                                    school_id: matched.school_id,
+                                    car_id: matched.car_id,
+                                    car_brand_id: matched.car_brand_id,
+                                    car_type_id: matched.car_type_id,
+                                    
+                                    ac_non_ac: req.body.ac_non_ac,
+                                    pickup_drop: req.body.pickup_drop,
+                                    daily_drive: req.body.daily_drive,
+                                    course_duration: req.body.course_duration,
+                                    
+                                    time_preferred: req.body.time_preferred,
+                                    time_optional: req.body.time_optional,
+                                    start_date: req.body.start_date,
+                                    end_date: req.body.end_date
+                                    
+                                });
+                                
+                                newBooking.save(newBooking).then((success)=>{
+                                    res.status(200);
+                                    return res.json({
+                                        success: true,
+                                        message: `Booking Successful !`,
+                                        data: success
+                                    });
+                                }).catch((error)=>{
+                                    res.status(400);
+                                    return res.json({
+                                        success: false,
+                                        message: `Unable to save booking !`,
+                                        error: error
+                                    });
+                                });
+                            }
+                            else
+                            {
+                                res.status(400);
+                                return res.json({
+                                    success: false,
+                                    message: `Your selected package is not available in your area !`,
+                                    data: null
+                                });  
+                            }
+                        }
+                    });
+                }, 
+                (err)=>{
+                    console.log(err);
+                    res.status(400);
+                    return res.json({
+                        success: false,
+                        message: `Unable to find school !`,
+                        error: err
+                    });
+                });
+            }
+            else
+            {
+                res.status(400);
+                return res.json({
+                    success: false,
+                    message: `We have not found any school in your area !`,
+                    data: null
+                });  
+            }
+    
+        }).catch((error) => {
+            console.log(error);
+            res.status(400);
+            return res.json({
+                success: false,
+                message: `Unable to find school !`,
+                error: error
+            });
+        });
+    }
+    else
+    {
+        res.status(400);
+        return res.json({
+            success: false,
+            message: `Latitude & Longitude is required !`
+        });  
+    }
+}
+
 function getBooking(req, res, next){
     if(!req.body._id){
         res.status(400);
@@ -74,7 +291,7 @@ function getBooking(req, res, next){
         });
     }
     else{
-        Booking.findById(req.body._id).populate('car_id package_id').exec(function (err, booking) {
+        Booking.findById(req.body._id).populate('car_id car_brand_id car_type_id package_id').exec(function (err, booking) {
             if (err){
                 res.status(400);
                 return res.json({
@@ -102,9 +319,39 @@ function getBooking(req, res, next){
     }
 }
 
+function getUserBooking(req, res, next){
+    let data = req.body.data || {};
+    Booking.find(data).sort({ created_at : -1}).exec(function(err, booking) {
+        if(err){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Unable to find booking !",
+                error:err
+            });
+        }
+        if(!booking){
+            res.status(400);
+            return res.json({
+                success:false,
+                message:"Unable to fetch, booking not found !",
+                data:null
+            });
+        }
+        else{
+            res.status(200);
+            return res.json({
+                success:true,
+                message:"Booking fetched successfully !",
+                data:booking
+            });
+        }
+    });
+}
+
 function getAllBooking(req, res){
     let data = req.body.data || {};
-    Booking.find(data).populate('car_id package_id').sort({ updatedAt : -1}).exec(function(err, booking) {
+    Booking.find(data).populate('car_id car_brand_id car_type_id package_id').sort({ created_at : -1}).exec(function(err, booking) {
         if(err){
             res.status(400);
             return res.json({
@@ -180,6 +427,21 @@ function updateBooking(req, res, next){
 }
 
 function removeBooking(req, res, next){
+    // Booking.remove().then((response)=>{
+    //     res.status(200);
+    //     return res.json({
+    //         success:true,
+    //         message:"Booking removed successfully !",
+    //     });
+    // }).catch((err)=>{
+    //     res.status(400);
+    //     return res.json({
+    //         success:false,
+    //         message:"Unable to remove booking !",
+    //         error:err
+    //     });
+    // });
+    
     if(!req.body._id){
         res.status(400);
         return res.json({

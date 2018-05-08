@@ -8,7 +8,7 @@ const Booking = require('../models/booking');
 const Token = require('../models/token');
 const config = require('../config');
 const mailFunction = require('./mail');
-
+var async = require('async');
 
 module.exports = {
     signUpUser: signUpUser,
@@ -19,6 +19,8 @@ module.exports = {
     updateProfileUser: updateProfileUser,
     changePasswordUser: changePasswordUser,
     forgotPasswordUser: forgotPasswordUser,
+    forgotPassword: forgotPassword,
+    changePassword: changePassword,
     resetUser: resetUser,
     resetPasswordUser: resetPasswordUser,
     removeUser: removeUser
@@ -173,6 +175,14 @@ function signInUser(req, res){
     });
 }
 
+function getBooking(data){
+    return new Promise((resolve, reject) => {
+        Booking.find({user_id: data}, 'package_id start_date end_date status').populate('package_id', 'plan_name').then((booking)=>{
+                 resolve({ booking });
+            }).catch((error)=>{ resolve(true); });
+    });
+}
+
 function getUser(req, res){
     try{
         jwt.verify(req.body.token, config.token_secret, function(err, decoded) {
@@ -201,12 +211,14 @@ function getUser(req, res){
                         });
                     }
                     else{
-                        user.password = '';
-                        res.status(200);
-                        return res.json({
-                            success:true,
-                            message:"User fetched successfully !",
-                            data: user
+                        getBooking(user._id).then((booking_history)=>{
+                            res.status(200);
+                            return res.json({
+                              success: true,
+                              message: 'Users fetched successfully !',
+                              data: user,
+                              booking: booking_history
+                            });
                         });
                     }
                 });
@@ -223,44 +235,145 @@ function getUser(req, res){
     }
 }
 
-function getBooking(data){
-    return new Promise((resolve, reject) => {
-        Booking.find({user_id: data}, 'package_id start_date end_date status').populate('package_id', 'plan_name').then((booking)=>{
-                 resolve({ booking });
-            }).catch((error)=>{ resolve(true); });
-    });
-}
-
 function getUsers(req, res){
-   let data = req.body.data;
-   User.find(data, 'first_name last_name email mobile').then((res_one)=>{
-   var count=0;
-   var finalArray = new Array();
-   for(var i=0;i<res_one.length;i++){
-      
-        var user_details = res_one[i];
-        getBooking(res_one[i]._id).then((booking_history)=>{
-            finalArray.push({user_details, booking_history});
-            count++;
-            if(count==res_one.length){
+   let data = req.body.data || {};
+   if(data._id){
+       User.find(data).then((res_one)=>{
+            var userDetails = {
+            	_id: null,
+				first_name: null,
+				last_name: null,
+				dob: null,
+				gender: null,
+				mobile: null,
+				email: null,
+				status: null,
+				updated_at: null,
+				created_at: null,
+				joining_date: null,
+				aadhar: null,
+				l_license: null,
+				pincode: null,
+				country: null,
+				state: null,
+				city: null,
+				area: null,
+				address: null,
+				blood_group: null,
+				alt_mobile: null,
+				booking_history: []
+            };
+            userDetails._id = res_one[0]._id;
+            userDetails.first_name = res_one[0].first_name;
+            userDetails.last_name = res_one[0].last_name;
+            userDetails.dob = res_one[0].dob;
+            userDetails.gender = res_one[0].gender;
+            userDetails.mobile = res_one[0].mobile;
+            userDetails.email = res_one[0].email;
+            userDetails.status = res_one[0].status;
+            userDetails.updated_at = res_one[0].updated_at;
+            userDetails.created_at = res_one[0].created_at;
+            userDetails.joining_date = res_one[0].joining_date;
+            userDetails.aadhar = res_one[0].aadhar;
+            userDetails.l_license = res_one[0].l_license;
+            userDetails.pincode = res_one[0].pincode;
+            userDetails.country = res_one[0].country;
+            userDetails.state = res_one[0].state;
+            userDetails.city = res_one[0].city;
+            userDetails.area = res_one[0].area;
+            userDetails.address = res_one[0].address;
+            userDetails.blood_group = res_one[0].blood_group;
+            userDetails.alt_mobile = res_one[0].alt_mobile;
+            
+              Booking.find({user_id: res_one[0]._id}, 'package_id start_date end_date status').populate('package_id', 'plan_name').then((booking)=>{
+                userDetails.booking_history = booking;
                 res.status(200);
                 return res.json({
                   success: true,
                   message: 'Users fetched successfully !',
-                  data: finalArray
+                  data: userDetails
                 });
-             }
-        });
-    }
-    
-   }).catch((error)=>{
-       res.status(400);
-       return res.json({
-           success:false,
-           message:'Unable to fetch user!',
-           error: error
+            
+            }).catch((err)=>{
+                res.status(400);
+                return res.json({
+                   success:false,
+                   message:'Unable to fetch user!',
+                   error: err
+               });
+            });
+       }).catch((error)=>{
+           res.status(400);
+           return res.json({
+               success:false,
+               message:'Unable to fetch user!',
+               error: error
+           });
        });
-   });
+   }
+   else{
+       User.find(data, 'first_name last_name email mobile').then((res_one)=>{
+        var count=0;
+        var length = res_one.length;
+        var userDetails = [];
+        async.forEach(res_one, (user_details, callback)=>{
+            Booking.find({user_id: user_details._id}, 'package_id start_date end_date status').populate('package_id', 'plan_name').then((booking_history)=>{
+                
+                var data = {
+        				_id: null,
+        				first_name: null,
+        				last_name: null,
+        			    mobile: null,
+        				email: null,
+            			booking_history: []
+                };
+                
+                data._id = user_details._id;
+                data.first_name = user_details.first_name;
+                data.last_name = user_details.last_name;
+                data.mobile = user_details.mobile;
+                data.email = user_details.email;
+                data.booking_history = booking_history;
+                
+                userDetails.push(data);
+                count++;
+                if(count==length){
+                    res.status(200);
+                    return res.json({
+                       success:true,
+                       message:'Users fetched successfully !',
+                       data: userDetails
+                   });
+                }
+            }).catch((err)=>{
+                res.status(400);
+                return res.json({
+                   success:false,
+                   message:'Unable to fetch users !',
+                   error: err
+               });
+            });
+        }, 
+        (err)=>{
+            console.log(err);
+            res.status(400);
+            return res.json({
+                success: false,
+                message: `Unable to find school !`,
+                error: err
+            });
+        });
+       
+        
+       }).catch((error)=>{
+           res.status(400);
+           return res.json({
+               success:false,
+               message:'Unable to fetch user!',
+               error: error
+           });
+       });
+   }
 }
 
 function getAllUsers(req, res){
@@ -340,11 +453,15 @@ function updateProfileUser(req, res){
                                     });
                                 }
                                 user.password = '';
-                                res.status(200);
-                                return res.json({
-                                    success:true,
-                                    message:"User updated successfully !",
-                                    data:user
+                               
+                                getBooking(user._id).then((booking_history)=>{
+                                    res.status(200);
+                                    return res.json({
+                                      success: true,
+                                      message: 'User updated successfully !',
+                                      data: user,
+                                      booking: booking_history
+                                    });
                                 });
                             });
                         }
@@ -505,6 +622,47 @@ function forgotPasswordUser(req, res){
             }
         })
     }
+}
+
+function forgotPassword(req, res){
+    User.find({email: req.body.email}).then((response)=>{
+        res.status(200);
+        return res.json({
+            success: true,
+            message: 'User fetched successfully !',
+            data: response
+        });
+    }).catch((err)=>{
+        res.status(400);
+        return res.json({
+            success: false,
+            message: 'Unable to find user !',
+            error: err
+        });
+    });
+}
+
+function changePassword(req, res){
+    bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(req.body.password, salt, function (err, hash) {
+            req.body.password= hash;
+            User.findByIdAndUpdate(req.body._id, req.body, { new: true }).then((response)=>{
+                res.status(200);
+                return res.json({
+                    success: true,
+                    message: 'Password changed successfully !',
+                    data: response
+                });
+            }).catch((err)=>{
+                res.status(400);
+                return res.json({
+                    success: false,
+                    message: 'Unable to change password !',
+                    error: err
+                });
+            });
+        });
+    });
 }
 
 function resetUser(req, res, next) {

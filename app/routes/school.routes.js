@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const SchoolController = require('../controllers/school');
 const authGaurd = require('../auth/auth');
+const userAuthGaurd = require('../auth/user_auth');
 const multer = require("multer");
 
 const storage = multer.diskStorage({
@@ -17,6 +18,7 @@ const upload = multer({storage: storage});
 router.post('/addschool', upload.fields([{name: 'logo', maxCount: 1}, {name: 'license_image', maxCount: 1}]), SchoolController.addSchool);
 router.post('/admin/login', SchoolController.loginSchool);
 router.post('/getschool',  authGaurd, SchoolController.getSchool);
+router.post('/filterschool',  userAuthGaurd, SchoolController.filterSchool);
 router.post('/getsingleschool', authGaurd, SchoolController.getSingleSchool);
 router.post('/updateschool', authGaurd, SchoolController.updateSchool);
 router.post('/removeschool', authGaurd, SchoolController.removeSchool);

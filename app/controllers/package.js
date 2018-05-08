@@ -41,7 +41,7 @@ function addPackage(req, res, next) {
 
 function getPackage(req, res){
     var data = req.body.data || {};
-    Package.find(data).populate('car_id').exec(function (err, pack) {
+    Package.find(data).populate({path : 'car_id', populate : {path : 'car_brand_id', select: 'brand_name'}}).populate({path : 'car_id',populate : {path : 'car_type_id', select: 'car_type'}}).exec(function (err, pack) {
         if(err){
             res.status(400);
             return res.json({

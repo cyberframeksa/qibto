@@ -4,7 +4,7 @@ const CarBrandController = require('../controllers/car_brand');
 const commonAuthGaurd = require('../auth/common_auth');
 
 router.post('/addcarbrand/', commonAuthGaurd, CarBrandController.AddCarBrand);
-router.post('/getcarbrand/', commonAuthGaurd, CarBrandController.GetCarBrand);
+router.post('/getcarbrand/', CarBrandController.GetCarBrand);
 router.post('/updatecarbrand/', commonAuthGaurd, CarBrandController.UpdateCarBrand);
 router.post('/removecarbrand/', commonAuthGaurd, CarBrandController.RemoveCarBrand);
 

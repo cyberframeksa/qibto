@@ -8,6 +8,8 @@ module.exports = mongoose.model('School', new Schema({
     password:          {type: String, required:true},
     mobile:            {type: Number, required:true},
     address:           {type: String, required:true},
+    latitude:          {type: Number, default:0},
+    longitude:         {type: Number, default:0},
     city:              {type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true},
     state:             {type: mongoose.Schema.Types.ObjectId, ref: 'State', required: true},
     country:           {type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true},
