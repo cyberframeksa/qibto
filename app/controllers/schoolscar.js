@@ -36,7 +36,7 @@ function AddSchoolsCar(req, res){
 
 function GetSchoolsCar(req, res){
     let data = req.body.data || {};
-    SchoolsCar.find(data).then((response)=>{
+    SchoolsCar.find(data).populate('car_id').then((response)=>{
         res.status(200);
         return res.json({
             success:true,
@@ -81,6 +81,7 @@ function UpdateSchoolsCar(req, res){
         });
     }
     else{
+        
         SchoolsCar.findById(req.body._id).then((response1)=>{
             SchoolsCar.findByIdAndUpdate(req.body._id, req.body, {new:true}).then((response2)=>{
                 res.status(200);

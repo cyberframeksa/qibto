@@ -6,6 +6,7 @@ module.exports = mongoose.model('SchoolsCar', new Schema({
     car_id:            {type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true},    
     car_number:        {type: String, required:true}, 
     car_color:         {type: String, required:true},
+    booked_slot:    [{time: String, date: Date}], 
     created_at:        {type: Date, default:new Date()},
     updated_at:        {type: Date, default:new Date()},
     status:            {type: Number, default:1},

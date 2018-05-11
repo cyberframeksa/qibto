@@ -23,7 +23,7 @@ module.exports = mongoose.model('Booking', new Schema({
     created_at:        {type: Date, default:new Date()},
     updated_at:        { type: Date, default: new Date() },
     start_date:        {type: Date, default:null},
-    end_date:          {type: Date, default:null},
+    end_date:          {type: Date, default: new Date()},
     status:            {type: Number, default:0},
     __v:               {type: Number, select: false}
 }, 
